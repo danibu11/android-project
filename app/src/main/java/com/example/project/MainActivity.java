@@ -2,6 +2,7 @@ package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
@@ -11,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("hii");
         System.out.println("ma holech");
         super.onCreate(savedInstanceState);
+        System.out.println("NEW CODE!!");
         setContentView(R.layout.activity_main);
 
     }
