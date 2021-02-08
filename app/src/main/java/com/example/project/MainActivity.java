@@ -3,16 +3,22 @@ package com.example.project;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    TextView t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("hii");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /*db*/
+        t=findViewById(R.id.title);
+        t.setText("hello "+User.getF_name()+" "+User.getL_name());
 
     }
+
 }
 /*
 check your current branch name and status at any time (git status)

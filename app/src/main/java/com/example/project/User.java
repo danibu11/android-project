@@ -3,8 +3,8 @@ package com.example.project;
 public class User {
 
     private int id;
-    private String F_name;
-    private String L_name;
+    private static String F_name;
+    private static String L_name;
     private String Language;
     private int Age;
     private String Region;
@@ -30,7 +30,7 @@ public class User {
         this.id = id;
     }
 
-    public String getF_name() {
+    public static String getF_name() {
         return F_name;
     }
 
@@ -38,7 +38,7 @@ public class User {
         F_name = f_name;
     }
 
-    public String getL_name() {
+    public static String getL_name() {
         return L_name;
     }
 
