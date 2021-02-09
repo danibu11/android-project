@@ -2,18 +2,24 @@ package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    TextView title;
+    ListView lv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("hii");
-        System.out.println("ma holech");
         super.onCreate(savedInstanceState);
-        System.out.println("NEW CODE!!");
         setContentView(R.layout.activity_main);
+
+        title = findViewById(R.id.title);
+        /*title.setText("hello "+getF_name()+" "+getL_name());
+        */
+
+
 
     }
 }
