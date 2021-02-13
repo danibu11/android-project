@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     tools:context=".LoginActivity">
 
     <TextView
@@ -36,7 +37,7 @@
         android:id="@+id/loginpassword_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="124dp"
+        android:layout_marginBottom="32dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -49,10 +50,22 @@
         android:id="@+id/loginbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="288dp"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.117"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/regbutton"
+        android:layout_width="214dp"
+        android:layout_height="47dp"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="240dp"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:text="new user press here"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:onClick="registerFunc"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
