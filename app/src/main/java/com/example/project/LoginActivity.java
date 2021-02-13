@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
     TextView emailField, passwordField;
-    Button loginButton;
+    Button loginButton, registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,8 @@ public class LoginActivity extends AppCompatActivity {
         emailField = findViewById(R.id.loginemail_editText);
         passwordField = findViewById(R.id.loginpassword_editText);
         loginButton = findViewById(R.id.loginbutton);
+        registerButton=findViewById(R.id.regbutton);
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void registerFunc(View view) {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class)
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
 }
