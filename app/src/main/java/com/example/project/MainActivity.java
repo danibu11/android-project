@@ -2,23 +2,34 @@ package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     TextView t;
+=======
+import android.widget.ListView;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+    TextView title;
+    ListView lv;
+>>>>>>> develop
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("hii");
-        System.out.println("ma holech");
         super.onCreate(savedInstanceState);
-        System.out.println("NEW CODE!!");
         setContentView(R.layout.activity_main);
         /*db*/
         t=findViewById(R.id.title);
         t.setText("hello "+User.getF_name()+" "+User.getL_name());
+
+        title = findViewById(R.id.title);
+        /*title.setText("hello "+getF_name()+" "+getL_name());
+        */
+
+
 
     }
 

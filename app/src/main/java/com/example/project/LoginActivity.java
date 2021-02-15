@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
-    TextView emailField, passwordField;
-    Button loginButton;
+    EditText emailField, passwordField;
+    Button loginButton, registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,8 @@ public class LoginActivity extends AppCompatActivity {
         emailField = findViewById(R.id.loginemail_editText);
         passwordField = findViewById(R.id.loginpassword_editText);
         loginButton = findViewById(R.id.loginbutton);
+        registerButton=findViewById(R.id.regbutton);
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,13 +31,26 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailField.getText().toString();
                 String password = passwordField.getText().toString();
                 String credentials = "Email: "+email+", Password: " + password;
+                String emailPattern = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
                 boolean emailEmpty, passwordEmpty;
                 //check not empty
-                if (email.trim().length() == 0) {
-                    Toast.makeText(LoginActivity.this, "Please input an Email Address", Toast.LENGTH_LONG).show();
+                if (email.trim().length() == 0)
+                {
+                    Toast.makeText(LoginActivity.this, "Please input an Email Address ", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (password.trim().length() == 0) {
+                else
+                {
+                    if (email.matches(emailPattern))
+                        Toast.makeText(getApplicationContext(), "Valid email address", Toast.LENGTH_SHORT).show();
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+                        return ;
+                    }
+                }
+                if (password.trim().length() == 0)
+                {
                     Toast.makeText(LoginActivity.this, "Please input a password", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -49,11 +65,18 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO delete these next 2 lines when db validation is done
                 Toast.makeText(LoginActivity.this, credentials, Toast.LENGTH_SHORT).show();
                 goToMainPage();
+
             }
         });
     }
+
     private void goToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void registerFunc(View view) {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 }
