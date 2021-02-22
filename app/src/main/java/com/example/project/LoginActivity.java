@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
     private void goToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
