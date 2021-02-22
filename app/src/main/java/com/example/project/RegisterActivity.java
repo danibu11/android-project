@@ -19,23 +19,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        TextView tv = findViewById(R.id.testView);
-        try {
-            SQLConnector sqlConnector = new SQLConnector();
-            if(sqlConnector.hakolTov())
-                tv.setText("Oved");
-            else tv.setText("Lo Oved");
-
-        }
-        catch(Exception e)
-        {
-            tv.setText("Lo Oved");
-            Log.e("TAG", "onCreate: Failed to DB, Baasa");
-        }
-
-
-
-
 
 
     }
