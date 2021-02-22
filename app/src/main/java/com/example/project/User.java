@@ -1,7 +1,13 @@
 package com.example.project;
 
-public class User {
+import android.content.Context;
+import android.database.Cursor;
+import android.util.Log;
 
+import java.util.ArrayList;
+
+public class User {
+    private static final String TAG = "USER"; //for logging
     private int id;
     private String F_name;
     private String L_name;
@@ -9,9 +15,10 @@ public class User {
     private int Age;
     private String Region;
     private String Password;
+    private String Email;
     private Privacy p;
 
-    public User(int id, String f_name, String l_name, String language, int age, String region, String password) {
+    public User(int id, String f_name, String l_name, String language, int age, String region, String password, String email) {
         this.id = id;
         F_name = f_name;
         L_name = l_name;
@@ -19,7 +26,7 @@ public class User {
         Age = age;
         Region = region;
         Password = password;
-
+        Email = email;
     }
 
     public int getId() {
@@ -78,8 +85,44 @@ public class User {
         Password = password;
     }
 
+    public String getEmail() {
+        return Email;
+    }
 
+    public void setEmail(String email) {
+        Email = email;
+    }
 
+    // parses an INSERT query formatted with its own data members as values, then invokes a DBHelper`s execute with it, to save itself to the DB/.
+    public void saveToDB(Context context) {
+        Log.d(TAG, "saveToDB");
+        String userDBString =
+                "(" + addTicksToStringForDB(this.Email) + ","
+                        + addTicksToStringForDB(this.Password) + ","
+                        + addTicksToStringForDB(this.F_name) + ","
+                        + addTicksToStringForDB(this.L_name) + ","
+                        + addTicksToStringForDB(this.Region) + ","
+                        + addTicksToStringForDB(this.Language) + ","
+                        + addTicksToStringForDB(String.valueOf(this.id)) + ","
+                        + addTicksToStringForDB(String.valueOf(this.Age)) + ")";
+        String saveUserQuery = "INSERT INTO users (email, password, firstName, lastName, region, language, id, age) VALUES " + userDBString;
+        new DBHelper(context).getWritableDatabase().execSQL(saveUserQuery);
+    };
 
+    private String addTicksToStringForDB(String inputString) {
+        return "'"+inputString+"'";
+    }
 
+    public String toString() {
+        String userString = "USER: " +
+                        this.Email + ","
+                        + this.Password + ","
+                        + this.F_name + ","
+                        + this.L_name + ","
+                        + this.Region + ","
+                        + this.Language + ","
+                        + String.valueOf(this.id) + ","
+                        + String.valueOf(this.Age);
+        return userString;
+    }
 }
