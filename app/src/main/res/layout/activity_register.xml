@@ -84,6 +84,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lNameText" />
 
+
+    <TextView
+        android:id="@+id/mailText"
+        android:layout_width="146dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="32dp"
+        android:text="Email"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirmPassText" />
+
     <EditText
         android:id="@+id/firstNameEdit"
         android:layout_width="176dp"
@@ -150,7 +162,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <EditText
-        android:id="@+id/PassEdit"
+        android:id="@+id/passEdit"
         android:layout_width="176dp"
         android:layout_height="37dp"
         android:layout_marginStart="24dp"
@@ -163,7 +175,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/confirmPassEdit"
+        android:id="@+id/conPassET"
         android:layout_width="176dp"
         android:layout_height="37dp"
         android:layout_marginStart="24dp"
@@ -175,6 +187,19 @@
         app:layout_constraintTop_toTopOf="@+id/confirmPassText"
         app:layout_constraintVertical_bias="0.0" />
 
+
+    <EditText
+        android:id="@+id/mailET"
+        android:layout_width="176dp"
+        android:layout_height="37dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="216dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -184,20 +209,9 @@
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.455"
+        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmPassText"
-        app:layout_constraintVertical_bias="0.628" />
-
-    <TextView
-        android:id="@+id/testView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
