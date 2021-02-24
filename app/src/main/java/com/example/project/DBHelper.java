@@ -18,7 +18,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private final String TAG = "DBHelper"; //for logging
     String CREATE_TASKS_TABLE = "CREATE TABLE tasks(taskId TEXT PRIMARY KEY, name TEXT, description TEXT, lastName TEXT, createdAt TEXT, executionDate TEXT, completed TEXT)";
     String CREATE_USERS_TABLE = "CREATE TABLE users(email TEXT PRIMARY KEY, password TEXT, firstName TEXT, lastName TEXT, region TEXT, language TEXT, id TEXT, age TEXT)";
-    String INSERT_ADMIN_USER = "INSERT INTO users (email, password, firstName, lastName, region, language, id, age) VALUES ('admin', 'admin', 'admin', 'admin', 'israel', 'english', '0', '69420')";
+    String CREATE_STUDYHELPER_TABLE = "CREATE TABLE studyHelper( a_d_d TEXT , a_d_h_d TEXT,ritalin TEXT, konserta TEXT, mealsPerDay TEXT)";
+
+    String INSERT_ADMIN_USER = "INSERT INTO users (email, password, firstName, lastName, region, language, id, age) VALUES ('admin@gm.cc', 'admin', 'admin', 'admin', 'israel', 'english', '0', '69420')";
 
     // constructor - db name is fixed.
     public DBHelper(Context context) {
@@ -29,8 +31,9 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "onCreate");
-        db.execSQL(CREATE_TASKS_TABLE); // creating the users table
+        db.execSQL(CREATE_TASKS_TABLE); // creating the tasks table
         db.execSQL(CREATE_USERS_TABLE); // creating the users table
+        db.execSQL(CREATE_STUDYHELPER_TABLE); // creating the studyHelper table
         db.execSQL(INSERT_ADMIN_USER); // immediately inserting one admin user so that we can erase the db whenever we want and still have an account to log in with - for development
     }
 
@@ -40,6 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d(TAG, "onUpgrade");
         db.execSQL("DROP TABLE IF EXISTS users");
         db.execSQL("DROP TABLE IF EXISTS tasks");
+        db.execSQL("DROP TABLE IF EXISTS studyHelper");
         onCreate(db);
     }
 
