@@ -39,8 +39,9 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         adhdButton=findViewById(R.id.adhdBtn);
         spinner=findViewById(R.id.spinner);
 
-        stringsChoicse=new ArrayList<String>();
+//create array to push into the spinner adapter
 
+        stringsChoicse=new ArrayList<String>();
         stringsChoicse.add("less then 3 meals");
         stringsChoicse.add("3 meals per day");
         stringsChoicse.add("more then 3 meals");
@@ -48,10 +49,9 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,stringsChoicse);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setSelected(false);  // must
-        spinner.setSelection(0,true);  //must
+        spinner.setSelected(false);
+        spinner.setSelection(0,true);
         spinner.setOnItemSelectedListener(this);
-
 
     }
 
@@ -59,8 +59,13 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         String item=parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(),"Selected :"+ item ,Toast.LENGTH_SHORT).show();
-
+        if(item =="less then 3 meals")
+            spinnerResult=1;
+        else if(item =="3 meals per day" )
+            spinnerResult=2;
+        else
+            spinnerResult=3;
+        Toast.makeText(parent.getContext(),"Selected :"+ item+ " "  +"Choise number :" +spinnerResult ,Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -145,8 +150,8 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     }
 
     public void pressRegister2(View view) {
-       // StudyHelper studyHelper = new StudyHelper(a_d_dButton.isChecked(),adhdButton.isChecked(),ritalinButton.isChecked(),konsertaButton.isChecked(),spinnerResult);
-        //studyHelper.saveToDB(this);
+      //StudyHelper studyHelper = new StudyHelper(a_d_dButton.isChecked(),adhdButton.isChecked(),ritalinButton.isChecked(),konsertaButton.isChecked(),spinnerResult);
+       //studyHelper.saveToDB(this);
 
         Intent intent = new Intent(RegisterActivity2.this, LoginActivity.class);
         startActivity(intent);

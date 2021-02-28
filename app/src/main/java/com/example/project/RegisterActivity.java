@@ -29,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
         etEmail=findViewById(R.id.mailET);
         etPass=findViewById(R.id.passEdit);
         etLang=findViewById(R.id.languegeEdit);
@@ -48,6 +49,8 @@ public class RegisterActivity extends AppCompatActivity {
         Email=regEmail();
 
     }
+    private static final String TAG = "db try";
+
     public String regFName(){
 
         return etFN.getText().toString().trim();
@@ -83,11 +86,9 @@ public class RegisterActivity extends AppCompatActivity {
         return etEmail.getText().toString().trim();
     }
 
-
-
     public void reg2(View view) {
-        //User user = new User(++idForDB,FirstName,LastName,Lang,age,Region,Pass,Email);
-        //user.saveToDB(this);
+        //    User user = new User(++idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
+       //     user.saveToDB(this);
 
         Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
         startActivity(intent);
