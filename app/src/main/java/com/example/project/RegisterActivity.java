@@ -47,10 +47,6 @@ public class RegisterActivity extends AppCompatActivity {
         Pass=regPass();
         Email=regEmail();
 
-
-
-
-
     }
     public String regFName(){
 
@@ -90,8 +86,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void reg2(View view) {
-        User user = new User(++idForDB,FirstName,LastName,Lang,age,Region,Pass,Email);
-        user.saveToDB(this);
+        //User user = new User(++idForDB,FirstName,LastName,Lang,age,Region,Pass,Email);
+        //user.saveToDB(this);
 
         Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
         startActivity(intent);

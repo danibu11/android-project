@@ -13,16 +13,20 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
-public class RegisterActivity2 extends AppCompatActivity {
+public class RegisterActivity2 extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     RadioButton a_d_dButton,ritalinButton,konsertaButton,adhdButton;
     static int countadd=0;
     static int countrit=0;
     static int countkonserta=0;
     static int countadhd=0;
-    Spinner spinner;
+     Spinner spinner;
+    List<String> stringsChoicse;
     static int spinnerResult;
 
     @Override
@@ -35,11 +39,33 @@ public class RegisterActivity2 extends AppCompatActivity {
         adhdButton=findViewById(R.id.adhdBtn);
         spinner=findViewById(R.id.spinner);
 
-        if(spinner.getSelectedItem()=="less then 3 meals")
-            spinnerResult=1;
-        else if(spinner.getSelectedItem()=="more then 3 meals")
-            spinnerResult=2;
-        else spinnerResult =3;
+        stringsChoicse=new ArrayList<String>();
+
+        stringsChoicse.add("less then 3 meals");
+        stringsChoicse.add("3 meals per day");
+        stringsChoicse.add("more then 3 meals");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,stringsChoicse);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setSelected(false);  // must
+        spinner.setSelection(0,true);  //must
+        spinner.setOnItemSelectedListener(this);
+
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        String item=parent.getItemAtPosition(position).toString();
+        Toast.makeText(parent.getContext(),"Selected :"+ item ,Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
 
     }
 
@@ -119,12 +145,15 @@ public class RegisterActivity2 extends AppCompatActivity {
     }
 
     public void pressRegister2(View view) {
-        StudyHelper studyHelper = new StudyHelper(a_d_dButton.isChecked(),adhdButton.isChecked(),ritalinButton.isChecked(),konsertaButton.isChecked(),spinnerResult);
-        studyHelper.saveToDB(this);
+       // StudyHelper studyHelper = new StudyHelper(a_d_dButton.isChecked(),adhdButton.isChecked(),ritalinButton.isChecked(),konsertaButton.isChecked(),spinnerResult);
+        //studyHelper.saveToDB(this);
 
         Intent intent = new Intent(RegisterActivity2.this, LoginActivity.class);
         startActivity(intent);
         //trying to fill the database but create for now problams
 
     }
+
+
+
 }

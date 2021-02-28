@@ -73,8 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-<<<<<<< HEAD
-=======
     private boolean validateCredentials(String email, String password) {
         boolean isValidCredentials = false;
         ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
@@ -87,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         return isValidCredentials;
     };
->>>>>>> 8e2fb66de5eb8d4ad17ae166c3dd3c2c8404ff92
+
 
     private void goToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
