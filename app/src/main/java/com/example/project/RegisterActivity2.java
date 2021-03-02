@@ -35,11 +35,7 @@ public class RegisterActivity2 extends AppCompatActivity {
         adhdButton=findViewById(R.id.adhdBtn);
         spinner=findViewById(R.id.spinner);
 
-        if(spinner.getSelectedItem()=="less then 3 meals")
-            spinnerResult=1;
-        else if(spinner.getSelectedItem()=="more then 3 meals")
-            spinnerResult=2;
-        else spinnerResult =3;
+
 
     }
 
@@ -119,11 +115,17 @@ public class RegisterActivity2 extends AppCompatActivity {
     }
 
     public void pressRegister2(View view) {
+        if(spinner.getSelectedItem()=="less then 3 meals")
+            spinnerResult=1;
+        else if(spinner.getSelectedItem()=="more then 3 meals")
+            spinnerResult=2;
+        else spinnerResult =3;
         StudyHelper studyHelper = new StudyHelper(a_d_dButton.isChecked(),adhdButton.isChecked(),ritalinButton.isChecked(),konsertaButton.isChecked(),spinnerResult);
         studyHelper.saveToDB(this);
 
         Intent intent = new Intent(RegisterActivity2.this, LoginActivity.class);
         startActivity(intent);
+
         //trying to fill the database but create for now problams
 
     }

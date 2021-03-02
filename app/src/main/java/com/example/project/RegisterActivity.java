@@ -95,5 +95,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
         startActivity(intent);
+
     }
 }
