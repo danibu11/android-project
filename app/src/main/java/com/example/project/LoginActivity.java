@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         return isValidCredentials;
     };
 
+
     private void goToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
