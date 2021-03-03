@@ -3,6 +3,8 @@ package com.example.project;
 import androidx.appcompat.app.AppCompatActivity;
 import java.sql.DriverManager;
 import java.sql.Connection;
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -86,9 +88,35 @@ public class RegisterActivity extends AppCompatActivity {
         return etEmail.getText().toString().trim();
     }
 
+    private boolean isUserExist(String newUserEmail) {
+        ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
+        for (int i = 0; i < allUsers.size(); i++) {
+            if (allUsers.get(i).getEmail().compareTo(newUserEmail) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void reg2(View view) {
-        //    User user = new User(++idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
-       //     user.saveToDB(this);
+        FirstName=regFName();
+        LastName=regLName();
+        age=regAge();
+        Region=regRegion();
+        Lang=regLang();
+        Pass=regPass();
+        Email=regEmail();
+        if (isUserExist(Email)) {
+            // TOAST "please select another email, user already exists"
+        } else {
+            User user = new User(++idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
+        }
+
+        Log.d("CREATE", "OK");
+        Log.d("CREATED", user.toString());
+        //try - catch save user to db
+        user.saveToDB(RegisterActivity.this);
+        Log.d("SAVE", "OK");
 
         Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
         startActivity(intent);

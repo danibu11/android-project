@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -81,13 +82,13 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         {
 
 
-            a_d_dButton.setChecked(true);
+            a_d_dButton.setPressed(true);
 
             countadd++;
         }
         else if(( a_d_dButton.isPressed() && countadd % 2 == 1))
         {
-            a_d_dButton.setChecked(false);
+            a_d_dButton.setPressed(false);
 
             countadd++;
         }
@@ -99,14 +100,14 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         if ((ritalinButton.isPressed() && countrit % 2 == 0))
         {
 
-            ritalinButton.setChecked(true);
+            ritalinButton.setPressed(true);
 
             countrit++;
         }
         else if((ritalinButton.isPressed() && countrit % 2 == 1))
         {
 
-            ritalinButton.setChecked(false);
+            ritalinButton.setPressed(false);
 
             countrit++;
         }
@@ -118,14 +119,14 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         {
 
 
-            konsertaButton.setChecked(true);
+            konsertaButton.setPressed(true);
 
             countkonserta++;
         }
         else if((konsertaButton.isPressed() && countkonserta % 2 == 1))
         {
 
-            konsertaButton.setChecked(false);
+            konsertaButton.setPressed(false);
 
             countkonserta++;
         }
@@ -136,21 +137,29 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         {
 
 
-            adhdButton.setChecked(true);
+            adhdButton.setPressed(true);
 
             countadhd++;
         }
         else if((adhdButton.isPressed() && countadhd % 2 == 1))
         {
 
-            adhdButton.setChecked(false);
+            adhdButton.setPressed(false);
 
             countadhd++;
         }
     }
 
+    public void endRegFunc(View view) {
 
-
-
-
+        StudyHelper studyHelper=new StudyHelper(a_d_dButton.isPressed(),adhdButton.isPressed(),ritalinButton.isPressed(),konsertaButton.isPressed(),spinnerResult);
+        try {
+            studyHelper.saveToDB(RegisterActivity2.this);
+        }
+        catch (Exception ex) {
+            Log.d("DB ERROR! - INSERT USER EXCEPTION", ex.toString());
+        }
+        Intent intent = new Intent(RegisterActivity2.this, LoginActivity.class);
+        startActivity(intent);
+    }
 }

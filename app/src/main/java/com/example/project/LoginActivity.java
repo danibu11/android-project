@@ -20,12 +20,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         emailField = findViewById(R.id.loginemail_editText);
         passwordField = findViewById(R.id.loginpassword_editText);
         loginButton = findViewById(R.id.loginbutton);
         registerButton = findViewById(R.id.regbutton);
-
+/////
+//        this.deleteDatabase("buchnitzDB");
+//        ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
+//        for (int i = 0; i < allUsers.size(); i++) {
+//            Log.d("FOUND USER", allUsers.get(i).toString());
+//        }
+        /////
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
