@@ -1,10 +1,12 @@
 package com.example.project;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView title;
     ListView lv;
+    EditText Tsk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,17 +28,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_task_add, null);
+                mBuilder.setView(mView);
+                final AlertDialog dialog = mBuilder.create();
+                dialog.show();
             }
         });
-
-
-        /*title.setText("hello "+getF_name()+" "+getL_name());
-        */
-
-
-
 
 
     }
