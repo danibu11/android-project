@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private final String TAG = "DBHelper"; //for logging
-    String CREATE_TASKS_TABLE = "CREATE TABLE tasks(taskId TEXT PRIMARY KEY, name TEXT, description TEXT, lastName TEXT, createdAt TEXT, executionDate TEXT, completed TEXT)";
+    String CREATE_TASKS_TABLE = "CREATE TABLE tasks(taskId TEXT PRIMARY KEY, description TEXT, part TEXT, time TEXT, length TEXT, date TEXT, completed TEXT)";
     String CREATE_USERS_TABLE = "CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT, firstName TEXT, lastName TEXT, region TEXT, language TEXT, id TEXT, age TEXT)";
     String CREATE_STUDYHELPER_TABLE = "CREATE TABLE studyHelper( a_d_d TEXT , a_d_h_d TEXT,ritalin TEXT, konserta TEXT, mealsPerDay TEXT)";
 

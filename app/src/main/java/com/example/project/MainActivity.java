@@ -3,41 +3,143 @@ package com.example.project;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity"; //for logging
 
     TextView title;
     ListView lv;
-    EditText Tsk;
+    EditText taskDiscriptionET, taskPartET;
+    Button editTimeBtn,editTimeBtn2,editDateBtn, taskBtn;
+    String taskPartString;
+    static int hour,minutes,f_hour,f_minutes,mounth,day,yearForDate, idForTasks=0, taskLength;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_task_add, null);
+                editTimeBtn= (Button) mView.findViewById(R.id.startTimeBtn);
+                editTimeBtn2= (Button) mView.findViewById(R.id.endTimeBtn);
+                editDateBtn= (Button) mView.findViewById(R.id.dateBtn);
+                taskDiscriptionET= mView.findViewById(R.id.descriptionET);
+                taskPartET= mView.findViewById(R.id.partET);
+                taskBtn= mView.findViewById(R.id.addTaskBtn);
+
+                editTimeBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar calendar=Calendar.getInstance();
+                        minutes=calendar.get(Calendar.MINUTE);
+                        hour=calendar.get(Calendar.HOUR_OF_DAY);
+                        TimePickerDialog timePickerDialog= new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                minutes=minute;
+                                hour=hourOfDay;
+                            }
+                        },hour,minutes,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
+                        timePickerDialog.show();
+                    }
+
+                });
+                editTimeBtn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar calendar=Calendar.getInstance();
+                        f_minutes=calendar.get(Calendar.MINUTE);
+                        f_hour=calendar.get(Calendar.HOUR_OF_DAY);
+                        TimePickerDialog timePickerDialog= new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                f_minutes=minute;
+                                f_hour=hourOfDay;
+                            }
+                        },f_hour,f_minutes,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
+                        timePickerDialog.show();
+                    }
+
+                });
+
+                editDateBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar calendar=Calendar.getInstance();
+                        day=calendar.get(Calendar.DAY_OF_MONTH);
+                        yearForDate=calendar.get(Calendar.YEAR);
+                        mounth=calendar.get(Calendar.MONTH);
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                day=calendar.get(Calendar.DAY_OF_MONTH);
+                                yearForDate=calendar.get(Calendar.YEAR);
+                                mounth=calendar.get(Calendar.MONTH);
+                            }
+                        },yearForDate,mounth,day);
+                        datePickerDialog.show();
+                    }
+                });
+
+                MyDate date=new MyDate(day,mounth,yearForDate);
+                MyTime time=new MyTime(hour,minutes,f_hour,f_minutes);
+                taskPartString = taskPartET.getText().toString();
+                taskLength= time.getFinishHour()- time.getStartHour() + time.getFinishMins() - time.getStartMins();
+                Tasks tasks=new Tasks(taskPartString,taskLength,idForTasks,taskDiscriptionET.getText().toString(),date, time);
+                taskBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                        tasks.saveToDB(mBuilder.getContext());
+                        Log.d("ss",tasks.toString());
+                            Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
+
+                        }
+                        catch (Exception e) {
+                            Log.d("ss", "lo oved");
+                        }
+
+                    }
+
+                });
+
                 mBuilder.setView(mView);
                 final AlertDialog dialog = mBuilder.create();
                 dialog.show();
+
+
+
+
             }
         });
 
 
     }
+
 
     //as straightforward as can be
     public void deleteDB(){
