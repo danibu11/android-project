@@ -16,6 +16,9 @@ import java.util.ArrayList;
 public class LoginActivity extends AppCompatActivity {
     EditText emailField, passwordField;
     Button loginButton, registerButton;
+    static String email, userName;//for moving them between intents
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordField = findViewById(R.id.loginpassword_editText);
         loginButton = findViewById(R.id.loginbutton);
         registerButton = findViewById(R.id.regbutton);
+
 /////
 //        this.deleteDatabase("buchnitzDB");
 //        ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
@@ -34,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = emailField.getText().toString();
+                email = emailField.getText().toString();
                 String password = passwordField.getText().toString();
                 String credentials = "Email: "+email+", Password: " + password;
                 String emailPattern = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
@@ -85,15 +89,20 @@ public class LoginActivity extends AppCompatActivity {
             if (allUsers.get(i).getEmail().compareTo(email) == 0) {
                 if (allUsers.get(i).getPassword().compareTo(password) == 0) {
                     isValidCredentials = true;
+                    //save the full name of the user name for later use.
+                    userName = (allUsers.get(i).getF_name()+" "+allUsers.get(i).getL_name());
+
                 }
             }
         }
         return isValidCredentials;
-    };
+    }
 
 
     private void goToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("GET_EMAIL", email);
+        intent.putExtra("GET_FULL_NAME", userName);
         startActivity(intent);
     }
 

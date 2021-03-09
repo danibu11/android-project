@@ -1,5 +1,7 @@
 package com.example.project;
 
+import java.util.ArrayList;
+
 public class MyTime {
     private int startHour;
     private int startMins;
@@ -11,6 +13,31 @@ public class MyTime {
         this.startMins = startMins;
         this.finishHour = finishHour;
         this.finishMins = finishMins;
+    }
+    public MyTime(String string){
+
+        int s_Hour, s_Mins, f_Hour,f_Mins, i;
+        String st = "";
+        ArrayList<String> lsDate= new ArrayList<String>();
+        for (i=0; i<string.length();i++){
+            if (string.charAt(i)!=':'){
+                st+=string.charAt(i);
+            }
+            else{
+                lsDate.add(st);
+                st="";
+            }
+        }
+        s_Hour = Integer.parseInt(lsDate.get(0));
+        s_Mins=Integer.parseInt(lsDate.get(1));
+        f_Hour=Integer.parseInt(lsDate.get(2));
+        f_Mins=Integer.parseInt(lsDate.get(2));
+        this.startHour = s_Hour;
+        this.startMins = s_Mins;
+        this.finishMins = f_Hour;
+        this.finishMins = f_Mins;
+
+
     }
 
     public int getStartHour() {
@@ -47,6 +74,6 @@ public class MyTime {
 
     @Override
     public String toString() {
-        return "start:"+startHour+":"+startMins+"  finish:"+finishHour+":"+finishMins;
+        return startHour+":"+startMins+finishHour+":"+finishMins;
     }
 }

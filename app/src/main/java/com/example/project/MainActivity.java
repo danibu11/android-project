@@ -2,6 +2,7 @@ package com.example.project;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -20,17 +21,19 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity"; //for logging
 
-    TextView title;
+    TextView fullNameTV, emailTV, todayTasks, task1, task2, task3, task4, task5;
     ListView lv;
+
     EditText taskDiscriptionET, taskPartET;
     Button editTimeBtn,editTimeBtn2,editDateBtn, taskBtn;
-    String taskPartString;
+    String taskPartString, fullNameText, emailText;
     static int hour,minutes,f_hour,f_minutes,mounth,day,yearForDate, idForTasks=0, taskLength;
 
     @Override
@@ -38,6 +41,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FloatingActionButton fab = findViewById(R.id.fab);
+
+        task1 = findViewById(R.id.task1);
+        task2 = findViewById(R.id.task2);
+        task3 = findViewById(R.id.task3);
+        task4 = findViewById(R.id.task4);
+        task5 = findViewById(R.id.task5);
+        fullNameText = getIntent().getStringExtra("GET_FULL_NAME");
+        emailText = getIntent().getStringExtra("GET_EMAIL");
+        fullNameTV = findViewById(R.id.fullNameTV);
+        fullNameTV.setText(fullNameText);
+        emailTV = findViewById(R.id.emailTV);
+        emailTV.setText(emailText);
+        todayTasks = findViewById(R.id.todayTasks);
+        todayTasks.setText(String.valueOf(numOfTodayTasks()));
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 taskDiscriptionET= mView.findViewById(R.id.descriptionET);
                 taskPartET= mView.findViewById(R.id.partET);
                 taskBtn= mView.findViewById(R.id.addTaskBtn);
+
 
                 editTimeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -138,6 +158,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+    public int numOfTodayTasks(){
+        ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(this);
+        Calendar calendar = Calendar.getInstance();
+        int sum = 0;
+        for (int i = 0; i<currentTasks.size(); i++){
+            if(calendar.DAY_OF_MONTH == currentTasks.get(i).getDate().getDay() && calendar.MONTH == currentTasks.get(i).getDate().getMounth()){
+                sum++;
+                switch(sum)
+                {
+                    case 1 : task1.setText(currentTasks.get(i).toString()); break;
+                    case 2 : task2.setText(currentTasks.get(i).toString()); break;
+                    case 3 : task3.setText(currentTasks.get(i).toString()); break;
+                    case 4 : task4.setText(currentTasks.get(i).toString()); break;
+                    case 5 : task5.setText(currentTasks.get(i).toString()); break;
+
+                }
+            }
+        }
+        return sum;
     }
 
 

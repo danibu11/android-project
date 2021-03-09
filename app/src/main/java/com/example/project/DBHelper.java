@@ -21,6 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     String CREATE_STUDYHELPER_TABLE = "CREATE TABLE studyHelper( a_d_d TEXT , a_d_h_d TEXT,ritalin TEXT, konserta TEXT, mealsPerDay TEXT)";
 
     String INSERT_ADMIN_USER = "INSERT INTO users (email, password, firstName, lastName, region, language, id, age) VALUES ('admin@gm.cc', 'admin', 'admin', 'admin', 'israel', 'english', '0', '69420')";
+    String INSERT_ADMIN_TASK = "INSERT INTO tasks (taskId , description , part , time , length , date , completed ) VALUES ('0', 'admin', '1', '11:11:11:11', '0', '11/11/11', 'false')";
 
     // constructor - db name is fixed.
     public DBHelper(Context context) {
@@ -35,6 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USERS_TABLE); // creating the users table
         db.execSQL(CREATE_STUDYHELPER_TABLE); // creating the studyHelper table
         db.execSQL(INSERT_ADMIN_USER); // immediately inserting one admin user so that we can erase the db whenever we want and still have an account to log in with - for development
+        db.execSQL(INSERT_ADMIN_TASK);
     }
 
     // creating the tables from scratch on update
@@ -48,6 +50,27 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // a few get-all methods
+    public static ArrayList<Tasks> getAllTasksFromDB(Context context){
+        // parses a "select all" query, then invokes a DBHelper`s execute with it
+        ArrayList<Tasks> allTasks = new ArrayList<>(); //result set
+        String query = "SELECT * FROM tasks";
+        Cursor c = new DBHelper(context).getReadableDatabase().rawQuery(query, null); // getting a cursor to the first entry
+        c.moveToFirst(); // moving to first just to make sure, the default is we ge the first entry anyway..
+        // for each table entry - we create an instance of User and push it into the result ArrayList
+        while(c.isAfterLast() == false){
+            allTasks.add(new Tasks( // extracting values from current entry - constructing a User Object and pushing it into the result ArrayList
+                    c.getString(c.getColumnIndex("part")),
+                    Integer.valueOf(c.getString(c.getColumnIndex("length"))),
+                    Integer.valueOf(c.getString(c.getColumnIndex("id"))),
+                    c.getString(c.getColumnIndex("description")),
+                    c.getString(c.getColumnIndex("date")),
+                    c.getString(c.getColumnIndex("time")),
+                    String.valueOf(c.getString (c.getColumnIndex("completed")))));
+            c.moveToNext();
+        }
+        return allTasks;
+    }
+
     public static ArrayList<User> getAllUsersFromDB(Context context){
         // parses a "select all" query, then invokes a DBHelper`s execute with it
         ArrayList<User> allUsers = new ArrayList<>(); //result set
@@ -69,4 +92,5 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return allUsers;
     }
+
 }

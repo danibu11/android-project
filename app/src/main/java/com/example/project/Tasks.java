@@ -13,6 +13,7 @@ public class Tasks {
     private String description;
     private MyDate date;
     private MyTime time;
+    private boolean completed;
 
 
     public Tasks(String part, int length, int id, String description, MyDate date, MyTime time) {
@@ -22,6 +23,18 @@ public class Tasks {
         this.description = description;
         this.date = date;
         this.time = time;
+    }
+
+    public Tasks(String part, Integer length, Integer id, String description, String date, String time, String compleated) {
+        this.part = part;
+        this.length = length;
+        this.id = id;
+        this.description = description;
+        MyDate myDate = new MyDate(date);
+        this.date = myDate;
+        MyTime myTime = new MyTime(time);
+        this.time = myTime;
+        this.completed = Boolean.valueOf(compleated);
     }
 
 
@@ -82,8 +95,9 @@ public class Tasks {
                         + addTicksToStringForDB((this.part)) + ","
                         + addTicksToStringForDB(this.time.toString()) + ","
                         + addTicksToStringForDB(String.valueOf( this.length)) + ","
-                        + addTicksToStringForDB(this.date.toString()) +  ")";
-        String saveUserQuery = "INSERT INTO tasks (taskId, description, part, time, length, date ) VALUES " + userDBString;
+                        + addTicksToStringForDB(this.date.toString()) +  ","
+                        + addTicksToStringForDB(String.valueOf(this.completed))+  ")";
+        String saveUserQuery = "INSERT INTO tasks (taskId, description, part, time, length, date, completed ) VALUES " + userDBString;
         new DBHelper(context).getWritableDatabase().execSQL(saveUserQuery);
     };
 
@@ -94,13 +108,6 @@ public class Tasks {
 
     @Override
     public String toString() {
-        return "Tasks{" +
-                "part=" + part +
-                ", length=" + length +
-                ", id=" + id +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", time=" + time +
-                '}';
+        return "part=" + part + ", length=" + length + ", description='" + description + '\'' + ", date=" + date + ", time=" + time + '}';
     }
 }
