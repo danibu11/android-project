@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">project</string>
+    <string name="app_name">DisOrder</string>
     <string-array name="strings">
         <item>less then 3 meals</item>
         <item>more then 3 meals</item>

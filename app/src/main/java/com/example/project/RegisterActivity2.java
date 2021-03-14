@@ -152,7 +152,8 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
 
     public void endRegFunc(View view) {
 
-        StudyHelper studyHelper=new StudyHelper(a_d_dButton.isPressed(),adhdButton.isPressed(),ritalinButton.isPressed(),konsertaButton.isPressed(),spinnerResult);
+        int userId= Integer.parseInt(getIntent().getStringExtra("ID_FOR_NEXT_REG"));
+        StudyHelper studyHelper=new StudyHelper(userId, a_d_dButton.isPressed(), adhdButton.isPressed(),ritalinButton.isPressed(),konsertaButton.isPressed(),spinnerResult);
         try {
             studyHelper.saveToDB(RegisterActivity2.this);
         }

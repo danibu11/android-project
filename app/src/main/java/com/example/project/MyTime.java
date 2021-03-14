@@ -28,10 +28,11 @@ public class MyTime {
                 st="";
             }
         }
+        lsDate.add(st);
         s_Hour = Integer.parseInt(lsDate.get(0));
         s_Mins=Integer.parseInt(lsDate.get(1));
         f_Hour=Integer.parseInt(lsDate.get(2));
-        f_Mins=Integer.parseInt(lsDate.get(2));
+        f_Mins=Integer.parseInt(lsDate.get(3));
         this.startHour = s_Hour;
         this.startMins = s_Mins;
         this.finishMins = f_Hour;

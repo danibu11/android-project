@@ -3,8 +3,6 @@ package com.example.project;
 import android.content.Context;
 import android.util.Log;
 
-import java.util.Date;
-
 public class Tasks {
     private static final String TAG = "TASKS"; //for logging
     private String part;
@@ -23,9 +21,10 @@ public class Tasks {
         this.description = description;
         this.date = date;
         this.time = time;
+        this.completed=false;
     }
 
-    public Tasks(String part, Integer length, Integer id, String description, String date, String time, String compleated) {
+    public Tasks(String part, Integer length, Integer id, String description, String date, String time, String completed) {
         this.part = part;
         this.length = length;
         this.id = id;
@@ -34,7 +33,7 @@ public class Tasks {
         this.date = myDate;
         MyTime myTime = new MyTime(time);
         this.time = myTime;
-        this.completed = Boolean.valueOf(compleated);
+        this.completed = Boolean.parseBoolean(completed);
     }
 
 
@@ -97,8 +96,8 @@ public class Tasks {
                         + addTicksToStringForDB(String.valueOf( this.length)) + ","
                         + addTicksToStringForDB(this.date.toString()) +  ","
                         + addTicksToStringForDB(String.valueOf(this.completed))+  ")";
-        String saveUserQuery = "INSERT INTO tasks (taskId, description, part, time, length, date, completed ) VALUES " + userDBString;
-        new DBHelper(context).getWritableDatabase().execSQL(saveUserQuery);
+        String saveTaskQuery = "INSERT INTO tasks (taskId, description, part, time, length, date, completed ) VALUES " + userDBString;
+        new DBHelper(context).getWritableDatabase().execSQL(saveTaskQuery);
     };
 
     private String addTicksToStringForDB(String inputString) {

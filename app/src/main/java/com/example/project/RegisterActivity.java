@@ -107,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
         Pass=regPass();
         Email=regEmail();
         if (isUserExist(Email)) {
-            // TOAST "please select another email, user already exists"
+            //TOAST "please select another email, user already exists"
         } else {
             User user = new User(++idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
         }
@@ -115,10 +115,19 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d("CREATE", "OK");
         Log.d("CREATED", user.toString());
         //try - catch save user to db
-        user.saveToDB(RegisterActivity.this);
-        Log.d("SAVE", "OK");
+        try {
+
+
+            user.saveToDB(RegisterActivity.this);
+            Log.d("SAVE", "OK");
+            }
+        catch (Exception e) {
+            Log.d("SAVE", "NOT OK");
+        }
+
 
         Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
+        intent.putExtra("ID_FOR_NEXT_REG", idForDB);
         startActivity(intent);
 
     }

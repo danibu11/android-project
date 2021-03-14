@@ -11,8 +11,10 @@ public class StudyHelper {
     private boolean ritalin;
     private boolean konserta;
     private int mealsPerDay;
+    private int userId;
 
-    public StudyHelper (boolean a_d_d, boolean a_d_h_d , boolean ritalin , boolean konserta , int mealsPerDay){
+    public StudyHelper ( int userId,boolean a_d_d, boolean a_d_h_d , boolean ritalin , boolean konserta , int mealsPerDay){
+        this.userId=userId;
         this.a_d_d=a_d_d;
         this.a_d_h_d=a_d_h_d;
         this.ritalin=ritalin;
@@ -64,12 +66,13 @@ public class StudyHelper {
     public void saveToDB(Context context) {
         Log.d(TAG, "saveToDB");
         String userDBString =
-                "(" + addTicksToStringForDB(String.valueOf(this.a_d_d)) + ","
+                "(" + addTicksToStringForDB(String.valueOf(this.userId)) + ","
+                        + addTicksToStringForDB(String.valueOf(this.a_d_d)) + ","
                         + addTicksToStringForDB(String.valueOf(this.a_d_h_d) )+ ","
                         + addTicksToStringForDB(String.valueOf(this.ritalin)) + ","
                         + addTicksToStringForDB(String.valueOf(this.konserta) )+ ","
                         + addTicksToStringForDB(String.valueOf(this.mealsPerDay))+ ")";
-        String saveUserQuery = "INSERT INTO studyHelper ( a_d_d , a_d_h_d,ritalin,konserta,mealsPerDay) VALUES " + userDBString;
+        String saveUserQuery = "INSERT INTO studyHelper ( userid, a_d_d , a_d_h_d,ritalin,konserta,mealsPerDay) VALUES " + userDBString;
         new DBHelper(context).getWritableDatabase().execSQL(saveUserQuery);
     };
 

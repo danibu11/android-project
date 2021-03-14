@@ -47,15 +47,16 @@ public class MainActivity extends AppCompatActivity {
         task3 = findViewById(R.id.task3);
         task4 = findViewById(R.id.task4);
         task5 = findViewById(R.id.task5);
+
         fullNameText = getIntent().getStringExtra("GET_FULL_NAME");
         emailText = getIntent().getStringExtra("GET_EMAIL");
+
         fullNameTV = findViewById(R.id.fullNameTV);
         fullNameTV.setText(fullNameText);
         emailTV = findViewById(R.id.emailTV);
         emailTV.setText(emailText);
         todayTasks = findViewById(R.id.todayTasks);
         todayTasks.setText(String.valueOf(numOfTodayTasks()));
-
 
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 f_minutes=minute;
                                 f_hour=hourOfDay;
+                                Log.d(TAG, "calendar section: "+f_minutes+" "+f_hour);
                             }
                         },f_hour,f_minutes,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
                         timePickerDialog.show();
@@ -116,9 +118,10 @@ public class MainActivity extends AppCompatActivity {
                         DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                day=calendar.get(Calendar.DAY_OF_MONTH);
-                                yearForDate=calendar.get(Calendar.YEAR);
-                                mounth=calendar.get(Calendar.MONTH);
+                                day=dayOfMonth;
+                                yearForDate=year;
+                                mounth=month+1;
+
                             }
                         },yearForDate,mounth,day);
                         datePickerDialog.show();
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         try{
+                            Log.d(TAG, "onDateSet: Day:"+ day+ " Month: "+mounth+ " Year: "+yearForDate);
                         tasks.saveToDB(mBuilder.getContext());
                         Log.d("ss",tasks.toString());
                             Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
@@ -156,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
     public int numOfTodayTasks(){
