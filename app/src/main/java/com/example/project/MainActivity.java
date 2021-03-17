@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 minutes=minute;
                                 hour=hourOfDay;
+                                Log.d(TAG, "calendar section: "+minutes+" "+hour);
                             }
                         },hour,minutes,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
                         timePickerDialog.show();
@@ -127,24 +129,25 @@ public class MainActivity extends AppCompatActivity {
                         datePickerDialog.show();
                     }
                 });
-
+                ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
+                idForTasks = currentTasks.size() + 1;
                 MyDate date=new MyDate(day,mounth,yearForDate);
                 MyTime time=new MyTime(hour,minutes,f_hour,f_minutes);
                 taskPartString = taskPartET.getText().toString();
                 taskLength= time.getFinishHour()- time.getStartHour() + time.getFinishMins() - time.getStartMins();
-                Tasks tasks=new Tasks(taskPartString,taskLength,idForTasks,taskDiscriptionET.getText().toString(),date, time);
+                Tasks tasks=new Tasks(taskPartString, taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time);
                 taskBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try{
                             Log.d(TAG, "onDateSet: Day:"+ day+ " Month: "+mounth+ " Year: "+yearForDate);
-                        tasks.saveToDB(mBuilder.getContext());
-                        Log.d("ss",tasks.toString());
+                            tasks.saveToDB(mBuilder.getContext());
+                            Log.d("ss",tasks.toString());
                             Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
-
                         }
                         catch (Exception e) {
                             Log.d("ss", "lo oved");
+                            Log.d("ss", e.getMessage());
                         }
 
                     }
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public int numOfTodayTasks(){
-        ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(this);
+        ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
         Calendar calendar = Calendar.getInstance();
         int sum = 0;
         for (int i = 0; i<currentTasks.size(); i++){

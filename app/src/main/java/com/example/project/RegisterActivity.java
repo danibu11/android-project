@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText etreg,etLN,etFN,etLang,etAge,etPass,etEmail;
@@ -99,6 +100,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void reg2(View view) {
+        ArrayList<User> currentTasks = DBHelper.getAllUsersFromDB(RegisterActivity.this);
+        idForDB = currentTasks.size() ;
         FirstName=regFName();
         LastName=regLName();
         age=regAge();
@@ -106,28 +109,37 @@ public class RegisterActivity extends AppCompatActivity {
         Lang=regLang();
         Pass=regPass();
         Email=regEmail();
-        if (isUserExist(Email)) {
+        User user = new User(idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
+
+        Log.d("user detail after creation",""+Email+" "+FirstName);
+        if (isUserExist(Email))
+        {
             //TOAST "please select another email, user already exists"
-        } else {
-            User user = new User(++idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
+            Toast.makeText(RegisterActivity.this,"please select another Email, user already exists",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            //user = new User(idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
         }
 
         Log.d("CREATE", "OK");
-        Log.d("CREATED", user.toString());
+        //Log.d("CREATED", user.toString());
         //try - catch save user to db
-        try {
 
+
+        try {
 
             user.saveToDB(RegisterActivity.this);
             Log.d("SAVE", "OK");
             }
         catch (Exception e) {
-            Log.d("SAVE", "NOT OK");
+
+            Log.d("SAVE", "NOT OK  "+ e.getMessage());
         }
 
 
         Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
-        intent.putExtra("ID_FOR_NEXT_REG", idForDB);
+        intent.putExtra("ID_FOR_USER", idForDB);
         startActivity(intent);
 
     }

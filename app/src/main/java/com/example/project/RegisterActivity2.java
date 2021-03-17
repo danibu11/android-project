@@ -151,10 +151,18 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     }
 
     public void endRegFunc(View view) {
-
-        int userId= Integer.parseInt(getIntent().getStringExtra("ID_FOR_NEXT_REG"));
-        StudyHelper studyHelper=new StudyHelper(userId, a_d_dButton.isPressed(), adhdButton.isPressed(),ritalinButton.isPressed(),konsertaButton.isPressed(),spinnerResult);
+        int userId = 100;
         try {
+            userId= getIntent().getIntExtra("ID_FOR_USER",100);
+        }
+        catch (Exception e){
+            Log.d("Register2", ""+userId);
+        }
+
+        StudyHelper studyHelper=new StudyHelper(userId, a_d_dButton.isPressed(), adhdButton.isPressed(),ritalinButton.isPressed(),konsertaButton.isPressed(),spinnerResult);
+
+        try {
+            Log.d("Regiter2", "      "+userId);
             studyHelper.saveToDB(RegisterActivity2.this);
         }
         catch (Exception ex) {

@@ -24,7 +24,7 @@ public class Tasks {
         this.completed=false;
     }
 
-    public Tasks(String part, Integer length, Integer id, String description, String date, String time, String completed) {
+    public Tasks(String part, int length, int id, String description, String date, String time, String completed) {
         this.part = part;
         this.length = length;
         this.id = id;

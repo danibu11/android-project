@@ -13,27 +13,15 @@ public class  MyDate {
         this.year = year;
     }
 
-    public MyDate(String string){
-
-        int day=0, month=0, year=0, i;
-        String st = "";
-        ArrayList<String> lsDate= new ArrayList<String>();
-        for (i=0; i<string.length();i++){
-            if (string.charAt(i)!='/'){
-                st+=string.charAt(i);
-            }
-            else{
-                lsDate.add(st);
-                st="";
-            }
-        }
-        day = Integer.parseInt(lsDate.get(0));
-        month=Integer.parseInt(lsDate.get(1));
-        year=Integer.parseInt(lsDate.get(2));
+    public MyDate(String dateString){
+        int day=0, month=0, year=0;
+        String[] splitedDateString = dateString.split("/");
+        day = Integer.parseInt(splitedDateString[0]);
+        month=Integer.parseInt(splitedDateString[1]);
+        year=Integer.parseInt(splitedDateString[2]);
         this.day = day;
         this.mounth = month;
         this.year = year;
-
     }
 
     public int getDay() {

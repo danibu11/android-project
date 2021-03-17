@@ -19,6 +19,7 @@ public class User {
     private Privacy p;
 
     public User(int id, String f_name, String l_name, String language, int age, String region, String password, String email) {
+        Log.d(TAG,email+"  "+id );
         this.id = id;
         F_name = f_name;
         L_name = l_name;
@@ -121,8 +122,8 @@ public class User {
                         + this.L_name + ","
                         + this.Region + ","
                         + this.Language + ","
-                        + String.valueOf(this.id) + ","
-                        + String.valueOf(this.Age);
+                        + this.id + ","
+                        + this.Age;
         return userString;
     }
 }
