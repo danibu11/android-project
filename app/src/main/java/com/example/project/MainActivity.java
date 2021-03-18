@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         FloatingActionButton fab = findViewById(R.id.fab);
 
         task1 = findViewById(R.id.task1);
@@ -133,21 +134,25 @@ public class MainActivity extends AppCompatActivity {
                 idForTasks = currentTasks.size() + 1;
                 MyDate date=new MyDate(day,mounth,yearForDate);
                 MyTime time=new MyTime(hour,minutes,f_hour,f_minutes);
-                taskPartString = taskPartET.getText().toString();
-                taskLength= time.getFinishHour()- time.getStartHour() + time.getFinishMins() - time.getStartMins();
-                Tasks tasks=new Tasks(taskPartString, taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time);
+                Log.d(TAG, time.toString()+" "+date.toString());
+                taskLength= time.getFinishHour()- time.getStartHour();
+
+
                 taskBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try{
-                            Log.d(TAG, "onDateSet: Day:"+ day+ " Month: "+mounth+ " Year: "+yearForDate);
-                            tasks.saveToDB(mBuilder.getContext());
-                            Log.d("ss",tasks.toString());
+
+                            Tasks tasks=new Tasks(taskPartET.getText().toString(), taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time);
+                            Log.d(TAG+1, tasks.getDate().toString());
+                            Log.d(TAG+2, tasks.getTime().toString());
+                            tasks.saveToDB(MainActivity.this);
+                            Log.d(TAG,tasks.toString());
                             Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
                         }
                         catch (Exception e) {
-                            Log.d("ss", "lo oved");
-                            Log.d("ss", e.getMessage());
+                            Log.d(TAG, "lo oved");
+                            Log.d(TAG, e.getMessage());
                         }
 
                     }

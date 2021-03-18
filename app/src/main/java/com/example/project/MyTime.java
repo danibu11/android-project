@@ -15,6 +15,7 @@ public class MyTime {
         this.startMins = startMins;
         this.finishHour = finishHour;
         this.finishMins = finishMins;
+        Log.d("myTimeClass",this.startHour+":"+this.startMins+":"+this.finishHour+":"+this.finishMins);
     }
     public MyTime(String timeString){
         int s_Hour, s_Mins, f_Hour,f_Mins, i;
@@ -23,7 +24,7 @@ public class MyTime {
         s_Mins=Integer.parseInt(splitedTimeString[1]);
         f_Hour=Integer.parseInt(splitedTimeString[2]);
         f_Mins=Integer.parseInt(splitedTimeString[3]);
-        Log.d("ss",""+f_Mins);
+        Log.d("myTimeClass",s_Hour+":"+s_Mins+":"+f_Hour+":"+f_Mins);
         this.startHour = s_Hour;
         this.startMins = s_Mins;
         this.finishMins = f_Hour;

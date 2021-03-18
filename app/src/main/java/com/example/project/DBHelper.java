@@ -60,8 +60,8 @@ public class DBHelper extends SQLiteOpenHelper {
         while(c.isAfterLast() == false){
             allTasks.add(new Tasks( // extracting values from current entry - constructing a User Object and pushing it into the result ArrayList
                     c.getString(c.getColumnIndex("part")),
-                    Integer.valueOf(c.getString(c.getColumnIndex("length"))),
-                    Integer.valueOf(c.getString(c.getColumnIndex("taskId"))),
+                    Integer.parseInt(c.getString(c.getColumnIndex("length"))),
+                    Integer.parseInt(c.getString(c.getColumnIndex("taskId"))),
                     c.getString(c.getColumnIndex("description")),
                     c.getString(c.getColumnIndex("date")),
                     c.getString(c.getColumnIndex("time")),
@@ -80,11 +80,11 @@ public class DBHelper extends SQLiteOpenHelper {
         // for each table entry - we create an instance of User and push it into the result ArrayList
         while(c.isAfterLast() == false){
             allUsers.add(new User( // extracting values from current entry - constructing a User Object and pushing it into the result ArrayList
-                    Integer.valueOf(c.getString(c.getColumnIndex("id"))) ,
+                    Integer.parseInt(c.getString(c.getColumnIndex("id"))) ,
                     c.getString(c.getColumnIndex("firstName")),
                     c.getString(c.getColumnIndex("lastName")),
                     c.getString(c.getColumnIndex("language")),
-                    Integer.valueOf(c.getString(c.getColumnIndex("age"))),
+                    Integer.parseInt(c.getString(c.getColumnIndex("age"))),
                     c.getString(c.getColumnIndex("region")),
                     c.getString(c.getColumnIndex("password")),
                     c.getString(c.getColumnIndex("email"))));

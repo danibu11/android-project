@@ -1,5 +1,7 @@
 package com.example.project;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class  MyDate {
@@ -8,6 +10,7 @@ public class  MyDate {
     private int year;
 
     public MyDate(int day, int mounth, int year) {
+        Log.d("myDateClass",day+"/"+mounth+"/"+year);
         this.day = day;
         this.mounth = mounth;
         this.year = year;

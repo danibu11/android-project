@@ -123,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         Log.d("CREATE", "OK");
-        //Log.d("CREATED", user.toString());
+        Log.d("CREATED", user.toString());
         //try - catch save user to db
 
 

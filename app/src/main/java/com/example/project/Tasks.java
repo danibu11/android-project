@@ -107,6 +107,6 @@ public class Tasks {
 
     @Override
     public String toString() {
-        return "part=" + part + ", length=" + length + ", description='" + description + '\'' + ", date=" + date + ", time=" + time + '}';
+        return "taskID ="+this.id + "part=" + part + ", length=" + length + ", description=" + description + '\'' + ", date=" + date + ", time=" + time + '}';
     }
 }
