@@ -29,11 +29,15 @@ public class LoginActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.regbutton);
 
 /////
-  //      this.deleteDatabase("buchnitzDB");
+//        this.deleteDatabase("buchnitzDB");
 //        ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
 //        for (int i = 0; i < allUsers.size(); i++) {
 //            Log.d("FOUND USER", allUsers.get(i).toString());
 //        }
+        ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(this);
+        for (int i = 0; i < currentTasks.size(); i++) {
+            Log.d("FOUND TASK", currentTasks.get(i).toString());
+        }
         /////
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

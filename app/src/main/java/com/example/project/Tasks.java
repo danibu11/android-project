@@ -15,6 +15,7 @@ public class Tasks {
 
 
     public Tasks(String part, int length, int id, String description, MyDate date, MyTime time) {
+        Log.d("Tasks - object constructor", part+" "+ length+" "+ id+" "+ description+" "+ date.toString()+" "+ time.toString());
         this.part = part;
         this.length = length;
         this.id = id;
@@ -25,6 +26,7 @@ public class Tasks {
     }
 
     public Tasks(String part, int length, int id, String description, String date, String time, String completed) {
+        Log.d("Tasks - string constructor", part+" "+ length+" "+ id+" "+ description+" "+ date+" "+ time+" "+completed);
         this.part = part;
         this.length = length;
         this.id = id;
@@ -85,6 +87,14 @@ public class Tasks {
         this.time = time;
     }
 
+    public boolean getCompleted() {
+        return this.completed;
+    }
+
+    public void setCompleted(boolean isCompleted) {
+        this.completed = isCompleted;
+    }
+
 
     public void saveToDB(Context context) {
         Log.d(TAG, "saveToDB");
@@ -107,6 +117,6 @@ public class Tasks {
 
     @Override
     public String toString() {
-        return "taskID ="+this.id + "part=" + part + ", length=" + length + ", description=" + description + '\'' + ", date=" + date + ", time=" + time + '}';
+        return "taskID= "+this.id +", part=" + part + ", length=" + length + ", description=" + description + '\'' + ", date=" + date + ", time=" + time + '}';
     }
 }

@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 public class  MyDate {
     private int day;
-    private int mounth;
+    private int month;
     private int year;
 
-    public MyDate(int day, int mounth, int year) {
-        Log.d("myDateClass",day+"/"+mounth+"/"+year);
+    public MyDate(int day, int month, int year) {
+        Log.d("myDateClass",day+"/"+month+"/"+year);
         this.day = day;
-        this.mounth = mounth;
+        this.month = month;
         this.year = year;
     }
 
@@ -23,7 +23,7 @@ public class  MyDate {
         month=Integer.parseInt(splitedDateString[1]);
         year=Integer.parseInt(splitedDateString[2]);
         this.day = day;
-        this.mounth = month;
+        this.month = month;
         this.year = year;
     }
 
@@ -36,11 +36,11 @@ public class  MyDate {
     }
 
     public int getMounth() {
-        return mounth;
+        return month;
     }
 
-    public void setMounth(int mounth) {
-        this.mounth = mounth;
+    public void setMounth(int month) {
+        this.month = month;
     }
 
     public int getYear() {
@@ -53,7 +53,7 @@ public class  MyDate {
 
     @Override
     public String toString() {
-        return day + "/" + mounth +  "/" + year ;
+        return day + "/" + month +  "/" + year ;
 
     }
 }

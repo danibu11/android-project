@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
@@ -28,21 +30,46 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity"; //for logging
-
     TextView fullNameTV, emailTV, todayTasks, task1, task2, task3, task4, task5;
-    ListView lv;
-
+    ListView taskList;
     EditText taskDiscriptionET, taskPartET;
-    Button editTimeBtn,editTimeBtn2,editDateBtn, taskBtn;
-    String taskPartString, fullNameText, emailText;
-    static int hour,minutes,f_hour,f_minutes,mounth,day,yearForDate, idForTasks=0, taskLength;
-
+    Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn;
+    String fullNameText, emailText;
+    int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate;
+    ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        taskList = findViewById(R.id.taskList);
+
+        ArrayList<Tasks> allTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
+        String[] allTaskStrings= new String[allTasks.size()];
+        for (int i = 0; i < allTasks.size(); i++) {
+            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + allTasks.get(i).getCompleted(); // this is what's going to be displayed in the list row
+        }
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
+        // this is what happens when we press an item on the list
+        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemClick");
+                /*
+                    the position you get here is the position in the list
+                    it corresponds to the same position in the array/arraylist "allTaskStrings"/"allTasks"
+                    get the corresponding item from there and use it as you like
+                    you can also use this:
+                    // Tasks selectedTask = (Tasks) parent.getAdapter().getItem(position); //get selected Tasks instance
+                 */
+            }
+        });
+
+        Calendar calendar=Calendar.getInstance();
+        currentDay=calendar.get(Calendar.DAY_OF_MONTH);
+        currentYearForDate=calendar.get(Calendar.YEAR);
+        currentMonth=calendar.get(Calendar.MONTH);
 
         task1 = findViewById(R.id.task1);
         task2 = findViewById(R.id.task2);
@@ -66,82 +93,72 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_task_add, null);
-                editTimeBtn= (Button) mView.findViewById(R.id.startTimeBtn);
-                editTimeBtn2= (Button) mView.findViewById(R.id.endTimeBtn);
+                editStartTimeBtn= (Button) mView.findViewById(R.id.startTimeBtn);
+                editEndTimeBtn= (Button) mView.findViewById(R.id.endTimeBtn);
                 editDateBtn= (Button) mView.findViewById(R.id.dateBtn);
                 taskDiscriptionET= mView.findViewById(R.id.descriptionET);
                 taskPartET= mView.findViewById(R.id.partET);
                 taskBtn= mView.findViewById(R.id.addTaskBtn);
 
-
-                editTimeBtn.setOnClickListener(new View.OnClickListener() {
+                editStartTimeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Calendar calendar=Calendar.getInstance();
-                        minutes=calendar.get(Calendar.MINUTE);
-                        hour=calendar.get(Calendar.HOUR_OF_DAY);
+                        selectedStartMinute=calendar.get(Calendar.MINUTE);
+                        selectedStartHour=calendar.get(Calendar.HOUR_OF_DAY);
                         TimePickerDialog timePickerDialog= new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                minutes=minute;
-                                hour=hourOfDay;
-                                Log.d(TAG, "calendar section: "+minutes+" "+hour);
+                                updateStartTime(hourOfDay, minute);
+                                Log.d(TAG, "selected start time: "+selectedStartMinute+" "+selectedStartHour);
                             }
-                        },hour,minutes,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
+                        },selectedStartHour,selectedStartMinute,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
+
                         timePickerDialog.show();
                     }
-
                 });
-                editTimeBtn2.setOnClickListener(new View.OnClickListener() {
+                Log.d(TAG, "selected start time: "+selectedStartMinute+" "+selectedStartHour);
+                editEndTimeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Calendar calendar=Calendar.getInstance();
-                        f_minutes=calendar.get(Calendar.MINUTE);
-                        f_hour=calendar.get(Calendar.HOUR_OF_DAY);
+                        selectedEndMinute=calendar.get(Calendar.MINUTE);
+                        selectedEndHour=calendar.get(Calendar.HOUR_OF_DAY);
                         TimePickerDialog timePickerDialog= new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                f_minutes=minute;
-                                f_hour=hourOfDay;
-                                Log.d(TAG, "calendar section: "+f_minutes+" "+f_hour);
+                                updateEndTime(hourOfDay, minute);
+                                Log.d(TAG, "selected end time: "+selectedEndMinute+" "+selectedEndHour);
                             }
-                        },f_hour,f_minutes,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
+                        },selectedEndHour,selectedEndMinute,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
                         timePickerDialog.show();
                     }
-
                 });
-
                 editDateBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Calendar calendar=Calendar.getInstance();
-                        day=calendar.get(Calendar.DAY_OF_MONTH);
-                        yearForDate=calendar.get(Calendar.YEAR);
-                        mounth=calendar.get(Calendar.MONTH);
                         DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                day=dayOfMonth;
-                                yearForDate=year;
-                                mounth=month+1;
-
+                                Log.d("SELECTED DATE IN ADDTASK LISTENER", dayOfMonth+" "+month+" "+yearForDate);
+                                updateDateStamp(year, month, dayOfMonth);
                             }
-                        },yearForDate,mounth,day);
+                        },currentYearForDate,currentMonth,currentDay);
                         datePickerDialog.show();
                     }
                 });
-                ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
-                idForTasks = currentTasks.size() + 1;
-                MyDate date=new MyDate(day,mounth,yearForDate);
-                MyTime time=new MyTime(hour,minutes,f_hour,f_minutes);
-                Log.d(TAG, time.toString()+" "+date.toString());
-                taskLength= time.getFinishHour()- time.getStartHour();
-
 
                 taskBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try{
+                            ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
+                            idForTasks = currentTasks.size() + 1;
+                            Log.d("myDate ctor payload", day+" "+month+" "+yearForDate);
+                            MyDate date=new MyDate(day,month,yearForDate);
+                            MyTime time=new MyTime(selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute);
+                            Log.d(TAG, time.toString()+" "+date.toString());
+                            taskLength = time.getFinishHour() - time.getStartHour();
 
                             Tasks tasks=new Tasks(taskPartET.getText().toString(), taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time);
                             Log.d(TAG+1, tasks.getDate().toString());
@@ -149,27 +166,51 @@ public class MainActivity extends AppCompatActivity {
                             tasks.saveToDB(MainActivity.this);
                             Log.d(TAG,tasks.toString());
                             Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
+                            refreshList();
                         }
                         catch (Exception e) {
                             Log.d(TAG, "lo oved");
                             Log.d(TAG, e.getMessage());
                         }
-
                     }
-
                 });
-
                 mBuilder.setView(mView);
                 final AlertDialog dialog = mBuilder.create();
                 dialog.show();
-
-
-
-
             }
         });
 
     }
+
+    private void refreshList() {
+        Log.d(TAG, "refreshList");
+        ArrayList<Tasks> allTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
+        String[] allTaskStrings= new String[allTasks.size()];
+        for (int i = 0; i < allTasks.size(); i++) {
+            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + allTasks.get(i).getCompleted();
+        }
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
+        taskList.setAdapter(adapter); //re-set the list`s adapter
+    }
+
+    private void updateStartTime(int newStartHour, int newStartMinute) {
+        this.selectedStartHour = newStartHour;
+        this.selectedStartMinute = newStartMinute;
+    }
+
+    private void updateEndTime(int newEndHour, int newEndMinute) {
+        this.selectedEndHour = newEndHour;
+        this.selectedEndMinute = newEndMinute;
+    }
+
+    private void updateDateStamp(int inputYear, int inputMonth, int inputDayOfMonth) {
+        Log.d("USER SELECTED DATE", inputDayOfMonth+" "+inputMonth+" "+inputYear);
+        this.yearForDate = inputYear;
+        this.month = inputMonth + 1;
+        this.day = inputDayOfMonth;
+        Log.d("PARSED SELECTED DATE", this.day+" "+this.month+" "+this.yearForDate);
+    }
+
     public int numOfTodayTasks(){
         ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
         Calendar calendar = Calendar.getInstance();
