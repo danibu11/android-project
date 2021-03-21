@@ -1,14 +1,23 @@
 package com.example.project;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,23 +48,51 @@ public class MainActivity extends AppCompatActivity {
     int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate;
     ArrayAdapter<String> adapter;
     AlertDialog dialog = null;
+    String notificationChannelId = "disOrder_notification_id";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        int importance = NotificationManager.IMPORTANCE_LOW;
+        NotificationChannel mChannel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(notificationChannelId, "disOrder_notification_id", importance);
+            mChannel.enableLights(true);
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
 
+
+        //// TODO delete this crap
+        //        scheduleNotification(getNotification("POOOOOOOOOOP!", "Disorder Task Notification!"), 5000);
+        /*Calendar currentCalendar=Calendar.getInstance();
+        currentDay=currentCalendar.get(Calendar.DAY_OF_MONTH);
+        currentYearForDate=currentCalendar.get(Calendar.YEAR);
+        currentMonth=currentCalendar.get(Calendar.MONTH);
+        currentCalendar.set(currentYearForDate, currentMonth, currentDay);
+        Calendar testDate=Calendar.getInstance();
+        testDate.set(currentYearForDate, currentMonth, currentDay);
+        if (testDate.equals(currentCalendar)) {
+            Toast.makeText(MainActivity.this, "EQUALS ", Toast.LENGTH_LONG).show();
+        } else {
+            long diff = testDate.getTimeInMillis() - currentCalendar.getTimeInMillis();
+            Toast.makeText(MainActivity.this, "😀 NOT EQUALS, DIFF: "+diff, Toast.LENGTH_LONG).show();
+        }*/
+        ////
         FloatingActionButton fab = findViewById(R.id.fab);
         taskList = findViewById(R.id.taskList);
 
         ArrayList<Tasks> allTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
         String[] allTaskStrings= new String[allTasks.size()];
         for (int i = 0; i < allTasks.size(); i++) {
-            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + allTasks.get(i).getCompleted(); // this is what's going to be displayed in the list row
+            boolean isCompleted = String.valueOf(allTasks.get(i).getCompleted()).compareTo("true") == 0;
+            Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasks.get(i).getId(), String.valueOf(allTasks.get(i).getCompleted()));
+            String statusSymbol = isCompleted ? "✅" : "❌";
+            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + statusSymbol; // this is what's going to be displayed in the list row
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         // this is what happens when we press an item on the list
-
         refreshList();
 
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -163,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("myDate ctor payload", day+" "+month+" "+yearForDate);
                             MyDate date=new MyDate(day,month,yearForDate);
                             MyTime time=new MyTime(selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute);
+                            long timeTillTaskInMilliseconds = getTimeTillTaskInMilliseconds(date, time);
+                            scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeTillTaskInMilliseconds);
                             Log.d(TAG, time.toString()+" "+date.toString());
                             taskLength = time.getFinishHour() - time.getStartHour();
 
@@ -189,12 +228,47 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+private long getTimeTillTaskInMilliseconds(MyDate futureDate, MyTime futureTime) {
+    Calendar now = Calendar.getInstance();
+    Calendar taskStart = Calendar.getInstance();
+    taskStart.set(futureDate.getYear(), futureDate.getMounth(), futureDate.getDay(), futureTime.getStartHour(), futureTime.getStartMins());
+    long resultDiffInMilliseconds = taskStart.getTimeInMillis() - now.getTimeInMillis();
+    Log.d("RESULT DIFF IN MILLISECONDS:", String.valueOf(resultDiffInMilliseconds));
+    return resultDiffInMilliseconds;
+};
+
+private void scheduleNotification(Notification notification, long delay) {
+    Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+    notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+    notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    long futureInMillis = (-1) * (SystemClock.elapsedRealtime() + delay);
+    AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    Toast.makeText(MainActivity.this, "scheduled task notification to; "+futureInMillis+"milliseconds from now", Toast.LENGTH_LONG).show();
+    Log.d("SCHEDULE NOTIFICATION DELAY:", String.valueOf(futureInMillis));
+}
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Notification getNotification(String content, String title) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("\uD83D\uDE00" + title);
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_launcher_background);
+        builder.setChannelId(notificationChannelId);
+        return builder.build();
+    }
+
     private void refreshList() {
         Log.d(TAG, "refreshList");
         ArrayList<Tasks> allTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
         String[] allTaskStrings= new String[allTasks.size()];
         for (int i = 0; i < allTasks.size(); i++) {
-            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + allTasks.get(i).getCompleted();
+            boolean isCompleted = String.valueOf(allTasks.get(i).getCompleted()).compareTo("true") == 0;
+            Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasks.get(i).getId(), String.valueOf(allTasks.get(i).getCompleted()));
+            String statusSymbol = isCompleted ? "✅" : "❌";
+            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + statusSymbol;
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         taskList.setAdapter(adapter); //re-set the list`s adapter
@@ -219,21 +293,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int numOfTodayTasks(){
+        // this is used to find if the task day is today
+        Calendar calendar=Calendar.getInstance();
+        currentDay=calendar.get(Calendar.DAY_OF_MONTH);
+        currentYearForDate=calendar.get(Calendar.YEAR);
+        currentMonth=calendar.get(Calendar.MONTH);
+        Calendar today=Calendar.getInstance();
+        today.set(currentYearForDate, currentMonth, currentDay);
+        Calendar taskDay=Calendar.getInstance();
+        //        taskDay.set(taskYear, taskMonth, taskYear);
+        //        boolean isSameDay = today.equals(taskDay);
         ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
-        Calendar calendar = Calendar.getInstance();
         int sum = 0;
-        for (int i = 0; i<currentTasks.size(); i++){
-            if(calendar.DAY_OF_MONTH == currentTasks.get(i).getDate().getDay() && calendar.MONTH == currentTasks.get(i).getDate().getMounth()){
+        for (int i = 0; i < currentTasks.size(); i++){
+            Tasks currentTask = currentTasks.get(i);
+            taskDay.set(currentTask.getDate().getYear(), currentTask.getDate().getMounth(), currentTask.getDate().getDay());
+             if(today.equals(taskDay)){
                 sum++;
-                switch(sum)
-                {
-                    case 1 : task1.setText(currentTasks.get(i).toString()); break;
-                    case 2 : task2.setText(currentTasks.get(i).toString()); break;
-                    case 3 : task3.setText(currentTasks.get(i).toString()); break;
-                    case 4 : task4.setText(currentTasks.get(i).toString()); break;
-                    case 5 : task5.setText(currentTasks.get(i).toString()); break;
-
-                }
             }
         }
         return sum;

@@ -76,6 +76,11 @@ public class StudyHelper {
         new DBHelper(context).getWritableDatabase().execSQL(saveUserQuery);
     };
 
+    public void deleteFromDB(Context context) {
+        Log.d(TAG, "saveToDB");
+        String deleteStudyHelperRecordQuery = "DELETE FROM studyHelper WHERE studyHelper.userid="+String.valueOf(this.userId);
+        new DBHelper(context).getWritableDatabase().execSQL(deleteStudyHelperRecordQuery);
+    };
     private String addTicksToStringForDB(String inputString) {
         return "'"+inputString+"'";
     }

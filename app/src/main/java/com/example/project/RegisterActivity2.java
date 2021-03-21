@@ -29,17 +29,23 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
      Spinner spinner;
     List<String> stringsChoicse;
     static int spinnerResult;
-
+    boolean buttonsEnabled = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register2);
+        if (true) { // if mode is view - buttons are disabled
+            buttonsEnabled = true;
+        } else {
+            buttonsEnabled = false;
+        }
+
         a_d_dButton = findViewById(R.id.addBtn);
         ritalinButton= findViewById(R.id.ritalinBtn);
         konsertaButton= findViewById(R.id.konsertaBtn);
         adhdButton=findViewById(R.id.adhdBtn);
         spinner=findViewById(R.id.spinner);
-
+        a_d_dButton.setEnabled(buttonsEnabled);
 //create array to push into the spinner adapter
 
         stringsChoicse=new ArrayList<String>();
@@ -160,10 +166,16 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         }
 
         StudyHelper studyHelper=new StudyHelper(userId, a_d_dButton.isPressed(), adhdButton.isPressed(),ritalinButton.isPressed(),konsertaButton.isPressed(),spinnerResult);
-
         try {
             Log.d("Regiter2", "      "+userId);
-            studyHelper.saveToDB(RegisterActivity2.this);
+            String purpose = getIntent().getStringExtra("purpose");
+            if (purpose.compareTo("registration") == 0) {
+                studyHelper.saveToDB(RegisterActivity2.this);
+            }
+            if (purpose.compareTo("edit") == 0) {
+                studyHelper.deleteFromDB(RegisterActivity2.this);
+                studyHelper.saveToDB(RegisterActivity2.this);
+            }
         }
         catch (Exception ex) {
             Log.d("DB ERROR! - INSERT USER EXCEPTION", ex.toString());
