@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,10 +38,12 @@ public class MainActivity extends AppCompatActivity {
     String fullNameText, emailText;
     int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate;
     ArrayAdapter<String> adapter;
+    AlertDialog dialog = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         taskList = findViewById(R.id.taskList);
@@ -52,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         // this is what happens when we press an item on the list
+
+        refreshList();
+
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -167,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG,tasks.toString());
                             Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
                             refreshList();
+                            dialog.dismiss();
                         }
                         catch (Exception e) {
                             Log.d(TAG, "lo oved");
@@ -175,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 mBuilder.setView(mView);
-                final AlertDialog dialog = mBuilder.create();
+                dialog = mBuilder.create();
                 dialog.show();
             }
         });
@@ -230,6 +237,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return sum;
+    }
+
+    public void closeDialogFunc(AlertDialog.Builder mBuilder){
+        Dialog dialog = mBuilder.create();
+        dialog.dismiss();
     }
 
 
