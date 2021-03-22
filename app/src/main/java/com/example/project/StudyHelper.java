@@ -13,7 +13,9 @@ public class StudyHelper {
     private int mealsPerDay;
     private int userId;
 
-    public StudyHelper ( int userId,boolean a_d_d, boolean a_d_h_d , boolean ritalin , boolean konserta , int mealsPerDay){
+
+
+    public StudyHelper (int userId, boolean a_d_d, boolean a_d_h_d , boolean ritalin , boolean konserta , int mealsPerDay){
         this.userId=userId;
         this.a_d_d=a_d_d;
         this.a_d_h_d=a_d_h_d;
@@ -84,6 +86,16 @@ public class StudyHelper {
     private String addTicksToStringForDB(String inputString) {
         return "'"+inputString+"'";
     }
-
+    @Override
+    public String toString() {
+        return "StudyHelper{" +
+                "a_d_d=" + a_d_d +
+                ", a_d_h_d=" + a_d_h_d +
+                ", ritalin=" + ritalin +
+                ", konserta=" + konserta +
+                ", mealsPerDay=" + mealsPerDay +
+                ", userId=" + userId +
+                '}';
+    }
 
 }

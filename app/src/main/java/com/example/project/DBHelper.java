@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private final String TAG = "DBHelper"; //for logging
     String CREATE_TASKS_TABLE = "CREATE TABLE tasks(taskId TEXT PRIMARY KEY, description TEXT, part TEXT, time TEXT, length TEXT, date TEXT, completed TEXT)";
     String CREATE_USERS_TABLE = "CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT, firstName TEXT, lastName TEXT, region TEXT, language TEXT, id TEXT, age TEXT)";
-    String CREATE_STUDYHELPER_TABLE = "CREATE TABLE studyHelper( userid TEXT, a_d_d TEXT , a_d_h_d TEXT,ritalin TEXT, konserta TEXT, mealsPerDay TEXT)";
+    String CREATE_STUDYHELPER_TABLE = "CREATE TABLE studyHelper(userid TEXT,a_d_d TEXT,a_d_h_d TEXT,ritalin TEXT,konserta TEXT,mealsPerDay TEXT)";
 
     String INSERT_ADMIN_USER = "INSERT INTO users (email, password, firstName, lastName, region, language, id, age) VALUES ('admin@gm.cc', 'admin', 'admin', 'admin', 'israel', 'english', '0', '69420')";
     String INSERT_ADMIN_TASK = "INSERT INTO tasks (taskId , description , part , time , length , date , completed ) VALUES ('0', 'admin', '1', '11:11:11:11', '0', '11/11/11', 'false')";

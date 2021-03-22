@@ -40,7 +40,6 @@ public class RegisterActivity extends AppCompatActivity {
         etAge=findViewById(R.id.ageEdit);
         etFN=findViewById(R.id.firstNameEdit);
         etLN=findViewById(R.id.lastNameEdit);
-
         bt=findViewById(R.id.button);
 
         FirstName=regFName();
@@ -99,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
+
     public void reg2(View view) {
         ArrayList<User> currentTasks = DBHelper.getAllUsersFromDB(RegisterActivity.this);
         idForDB = currentTasks.size() ;
@@ -112,14 +112,11 @@ public class RegisterActivity extends AppCompatActivity {
         User user = new User(idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
 
         Log.d("user detail after creation",""+Email+" "+FirstName);
-        if (isUserExist(Email))
+        if (isUserExist(Email)||FirstName.trim().length()==0||LastName.trim().length()==0||Lang.trim().length()==0||Region.trim().length()==0||Pass.trim().length()==0)
         {
-            //TOAST "please select another email, user already exists"
-            Toast.makeText(RegisterActivity.this,"please select another Email, user already exists",Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(RegisterActivity.this,"One Of Fields Is Empty",Toast.LENGTH_SHORT).show();
             return;
-        }
-        else {
-            //user = new User(idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
         }
 
         Log.d("CREATE", "OK");

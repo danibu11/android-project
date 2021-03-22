@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -84,17 +85,17 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     public void clickOnADDButton(View view)
     {
 
-        if ((a_d_dButton.isPressed() && countadd % 2 == 0))
+        if ((a_d_dButton.isChecked() && countadd % 2 == 0))
         {
 
 
-            a_d_dButton.setPressed(true);
+            a_d_dButton.setChecked(true);
 
             countadd++;
         }
-        else if(( a_d_dButton.isPressed() && countadd % 2 == 1))
+        else if(( a_d_dButton.isChecked() && countadd % 2 == 1))
         {
-            a_d_dButton.setPressed(false);
+            a_d_dButton.setChecked(false);
 
             countadd++;
         }
@@ -103,17 +104,17 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
 
     public void clickOnRitalinButton(View view)
     {
-        if ((ritalinButton.isPressed() && countrit % 2 == 0))
+        if ((ritalinButton.isChecked() && countrit % 2 == 0))
         {
 
-            ritalinButton.setPressed(true);
+            ritalinButton.setChecked(true);
 
             countrit++;
         }
-        else if((ritalinButton.isPressed() && countrit % 2 == 1))
+        else if((ritalinButton.isChecked() && countrit % 2 == 1))
         {
 
-            ritalinButton.setPressed(false);
+            ritalinButton.setChecked(false);
 
             countrit++;
         }
@@ -121,36 +122,36 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
 
     public void clickOnKonsertaButton(View view)
     {
-        if ((konsertaButton.isPressed() && countkonserta % 2 == 0))
+        if ((konsertaButton.isChecked() && countkonserta % 2 == 0))
         {
 
 
-            konsertaButton.setPressed(true);
+            konsertaButton.setChecked(true);
 
             countkonserta++;
         }
-        else if((konsertaButton.isPressed() && countkonserta % 2 == 1))
+        else if((konsertaButton.isChecked() && countkonserta % 2 == 1))
         {
 
-            konsertaButton.setPressed(false);
+            konsertaButton.setChecked(false);
 
             countkonserta++;
         }
     }
 
     public void clickOnADHDButton(View view) {
-        if ((adhdButton.isPressed() && countadhd % 2 == 0))
+        if ((adhdButton.isChecked() && countadhd % 2 == 0))
         {
 
 
-            adhdButton.setPressed(true);
+            adhdButton.setChecked(true);
 
             countadhd++;
         }
-        else if((adhdButton.isPressed() && countadhd % 2 == 1))
+        else if((adhdButton.isChecked() && countadhd % 2 == 1))
         {
 
-            adhdButton.setPressed(false);
+            adhdButton.setChecked(false);
 
             countadhd++;
         }
@@ -164,8 +165,8 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         catch (Exception e){
             Log.d("Register2", ""+userId);
         }
-
-        StudyHelper studyHelper=new StudyHelper(userId, a_d_dButton.isPressed(), adhdButton.isPressed(),ritalinButton.isPressed(),konsertaButton.isPressed(),spinnerResult);
+        StudyHelper studyHelper=new StudyHelper(userId, a_d_dButton.isChecked(), adhdButton.isChecked(),ritalinButton.isChecked(),konsertaButton.isChecked(),spinnerResult);
+        Log.d("stuyhelper created ", studyHelper.toString());
         try {
             Log.d("Regiter2", "      "+userId);
             String purpose = getIntent().getStringExtra("purpose");

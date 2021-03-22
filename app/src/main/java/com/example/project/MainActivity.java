@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 taskBtn.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
                         try{
@@ -314,12 +315,6 @@ private void scheduleNotification(Notification notification, long delay) {
         }
         return sum;
     }
-
-    public void closeDialogFunc(AlertDialog.Builder mBuilder){
-        Dialog dialog = mBuilder.create();
-        dialog.dismiss();
-    }
-
 
     //as straightforward as can be
     public void deleteDB(){
