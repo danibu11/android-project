@@ -62,6 +62,15 @@ public class StudyHelper {
         this.mealsPerDay = mealsPerDay;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+
 
     public void saveToDB(Context context) {
         Log.d(TAG, "saveToDB");
@@ -86,4 +95,14 @@ public class StudyHelper {
     }
 
 
+    @Override
+    public String toString() {
+        return  "a_d_d=" + a_d_d +
+                ", a_d_h_d=" + a_d_h_d +
+                ", ritalin=" + ritalin +
+                ", konserta=" + konserta +
+                ", mealsPerDay=" + mealsPerDay +
+                ", userId=" + userId +
+                '}';
+    }
 }

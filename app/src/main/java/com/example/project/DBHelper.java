@@ -93,4 +93,24 @@ public class DBHelper extends SQLiteOpenHelper {
         return allUsers;
     }
 
+    public static ArrayList<StudyHelper> getStudyHelperFromDB(Context context){
+        // parses a "select all" query, then invokes a DBHelper`s execute with it
+        ArrayList<StudyHelper> studyHelperTable = new ArrayList<>(); //result set
+        String query = "SELECT * FROM studyHelper";
+        Cursor c = new DBHelper(context).getReadableDatabase().rawQuery(query, null); // getting a cursor to the first entry
+        c.moveToFirst(); // moving to first just to make sure, the default is we ge the first entry anyway..
+        // for each table entry - we create an instance of User and push it into the result ArrayList
+        while(c.isAfterLast() == false){
+            studyHelperTable.add(new StudyHelper( // extracting values from current entry - constructing a User Object and pushing it into the result ArrayList
+                    Integer.parseInt(String.valueOf(c.getColumnIndex("userId"))),
+                    Boolean.parseBoolean(c.getString(c.getColumnIndex("a_d_d"))),
+                    Boolean.parseBoolean(c.getString(c.getColumnIndex("a_d_h_d"))),
+                    Boolean.parseBoolean(String.valueOf(c.getColumnIndex("ritalin"))),
+                    Boolean.parseBoolean(String.valueOf(c.getColumnIndex("konserta"))),
+                    Integer.parseInt(c.getString (c.getColumnIndex("mealsPerDay")))));
+            c.moveToNext();
+        }
+        return studyHelperTable;
+    }
+
 }

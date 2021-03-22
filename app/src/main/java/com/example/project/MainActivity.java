@@ -43,16 +43,23 @@ public class MainActivity extends AppCompatActivity {
     TextView fullNameTV, emailTV, todayTasks, task1, task2, task3, task4, task5;
     ListView taskList;
     EditText taskDiscriptionET, taskPartET;
-    Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn;
+    Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn, editUserInfoBtn;
     String fullNameText, emailText;
-    int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate;
+    int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate, idForDB;
     ArrayAdapter<String> adapter;
     AlertDialog dialog = null;
     String notificationChannelId = "disOrder_notification_id";
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        idForDB = getIntent().getIntExtra("GET_USER_ID", 100);
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int importance = NotificationManager.IMPORTANCE_LOW;
@@ -123,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         fullNameText = getIntent().getStringExtra("GET_FULL_NAME");
         emailText = getIntent().getStringExtra("GET_EMAIL");
 
+        editUserInfoBtn = findViewById(R.id.editStudyHelperBtn);
         fullNameTV = findViewById(R.id.fullNameTV);
         fullNameTV.setText(fullNameText);
         emailTV = findViewById(R.id.emailTV);
@@ -192,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 taskBtn.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
                         try{
@@ -227,6 +236,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 
 private long getTimeTillTaskInMilliseconds(MyDate futureDate, MyTime futureTime) {
     Calendar now = Calendar.getInstance();
@@ -316,7 +327,7 @@ private void scheduleNotification(Notification notification, long delay) {
     }
 
     public void closeDialogFunc(AlertDialog.Builder mBuilder){
-        Dialog dialog = mBuilder.create();
+
         dialog.dismiss();
     }
 
@@ -325,6 +336,15 @@ private void scheduleNotification(Notification notification, long delay) {
     public void deleteDB(){
         Log.d(TAG, "delete DB");
         this.deleteDatabase("buchnitzDB");
+    }
+
+    public void switchActivityToReg2(View view) {
+
+
+        Intent intent = new Intent(MainActivity.this, RegisterActivity2.class);
+        intent.putExtra("GET_USER_ID", idForDB);
+        intent.putExtra("purpose", "watch");
+        startActivity(intent);
     }
 }
 /*
