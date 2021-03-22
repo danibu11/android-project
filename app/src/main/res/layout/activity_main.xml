@@ -2,28 +2,103 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lay"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
+        android:backgroundTint="@color/colorAccent"
+        android:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
     <TextView
-        android:id="@+id/title"
-        android:layout_width="58dp"
-        android:layout_height="30dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="242dp"
-        tools:layout_editor_absoluteY="104dp" />
+        android:id="@+id/fullNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="24dp"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/emailTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/fullNameTV"
+        app:layout_constraintTop_toBottomOf="@+id/fullNameTV" />
+
+    <TextView
+        android:id="@+id/todayTasks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        app:layout_constraintStart_toStartOf="@+id/emailTV"
+        app:layout_constraintTop_toBottomOf="@+id/emailTV" />
+
+    <TextView
+        android:id="@+id/task1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="198dp"
+        android:layout_marginEnd="27dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/task2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/task1"
+        app:layout_constraintStart_toStartOf="@+id/task1"
+        app:layout_constraintTop_toBottomOf="@+id/task1" />
+
+    <TextView
+        android:id="@+id/task3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/task2"
+        app:layout_constraintStart_toStartOf="@+id/task2"
+        app:layout_constraintTop_toBottomOf="@+id/task2" />
+
+    <TextView
+        android:id="@+id/task4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        app:layout_constraintEnd_toEndOf="@+id/task3"
+        app:layout_constraintStart_toStartOf="@+id/task3"
+        app:layout_constraintTop_toBottomOf="@+id/task3" />
+
+    <TextView
+        android:id="@+id/task5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/task4"
+        app:layout_constraintStart_toStartOf="@+id/task4"
+        app:layout_constraintTop_toBottomOf="@+id/task4" />
 
     <ListView
-        android:id="@+id/list"
-        android:layout_width="165dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginEnd="4dp"
+        android:id="@+id/taskList"
+        android:layout_width="217dp"
+        android:layout_height="242dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
-
-    </ListView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
