@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,6 +28,7 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -104,16 +106,36 @@ public class MainActivity extends AppCompatActivity {
 
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick");
-                /*
-                    the position you get here is the position in the list
-                    it corresponds to the same position in the array/arraylist "allTaskStrings"/"allTasks"
-                    get the corresponding item from there and use it as you like
-                    you can also use this:
-                    // Tasks selectedTask = (Tasks) parent.getAdapter().getItem(position); //get selected Tasks instance
-                 */
+            public void onItemClick(AdapterView<?> parent, View view,  int position, long id)
+            {
+                PopupMenu popupMenu=new PopupMenu(MainActivity.this,view);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        int iditem = item.getItemId() ;
+                        switch (iditem) {
+                            case R.id.showT:Log.d("popmenu ", "Show Task"); break;
+                            case R.id.delT: Log.d ("delpop", "Del Task"); break;
+                        }
+
+                        return true;
+                    }
+
+                });
+
+                popupMenu.inflate(R.menu.pop_up_show);
+                popupMenu.show();
+
+    /*
+        the position you get here is the position in the list
+        it corresponds to the same position in the array/arraylist "allTaskStrings"/"allTasks"
+        get the corresponding item from there and use it as you like
+        you can also use this:
+        //// Tasks selectedTask = (Tasks) parent.getAdapter().getItem(position); //get selected Tasks instance
+     */
             }
+
         });
 
         Calendar calendar=Calendar.getInstance();
