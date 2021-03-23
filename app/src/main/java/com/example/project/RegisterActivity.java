@@ -139,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
-        intent.putExtra("ID_FOR_USER", idForDB);
+        intent.putExtra("GET_USER_ID", idForDB);
         intent.putExtra("purpose", "registration"); //  registration/edit/view
         startActivity(intent);
 
