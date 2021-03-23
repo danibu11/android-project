@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     EditText taskDiscriptionET, taskPartET;
     Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn, editUserInfoBtn;
     String fullNameText, emailText;
-    int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate, idForDB;
+    int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate,userId;
     ArrayAdapter<String> adapter;
     AlertDialog dialog = null;
     String notificationChannelId = "disOrder_notification_id";
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        idForDB = getIntent().getIntExtra("GET_USER_ID", 100);
+        userId = getIntent().getIntExtra("GET_USER_ID", 100);
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int importance = NotificationManager.IMPORTANCE_LOW;
@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
         ////
         FloatingActionButton fab = findViewById(R.id.fab);
         taskList = findViewById(R.id.taskList);
-
-        ArrayList<Tasks> allTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
+        userId = getIntent().getIntExtra("GET_USER_ID", 100);
+        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
         String[] allTaskStrings= new String[allTasks.size()];
         for (int i = 0; i < allTasks.size(); i++) {
             boolean isCompleted = String.valueOf(allTasks.get(i).getCompleted()).compareTo("true") == 0;
@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,  int position, long id)
             {
+                userId = getIntent().getIntExtra("GET_USER_ID", 100);
+                ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
                 PopupMenu popupMenu=new PopupMenu(MainActivity.this,view);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -115,10 +117,15 @@ public class MainActivity extends AppCompatActivity {
 
                         int iditem = item.getItemId() ;
                         switch (iditem) {
-                            case R.id.showT:Log.d("popmenu ", "Show Task"); break;
-                            case R.id.delT: Log.d ("delpop", "Del Task"); break;
+                            case R.id.showT:
+                                Log.d("popmenu ", "Show Task"+""+position);
+                                break;
+                            case R.id.delT:
+                                allTasks.get(position).deleteFromDB(MainActivity.this);
+                                Log.d ("delpop", "Del Task");
+                                break;
                         }
-
+                        recreate();
                         return true;
                     }
 
@@ -150,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
         task5 = findViewById(R.id.task5);
 
         ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
-        idForDB = getIntent().getIntExtra("GET_USER_ID", 100);
+        userId = getIntent().getIntExtra("GET_USER_ID", 100);
         for (int i = 0; i < allUsers.size(); i++) {
-            if (allUsers.get(i).getId() == idForDB) {
+            if (allUsers.get(i).getId() == userId) {
                 fullNameText = "Hello "+allUsers.get(i).getF_name()+" "+allUsers.get(i).getL_name();
                 emailText = "      "+allUsers.get(i).getEmail();
 
@@ -242,8 +249,9 @@ public class MainActivity extends AppCompatActivity {
                             scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeTillTaskInMilliseconds);
                             Log.d(TAG, time.toString()+" "+date.toString());
                             taskLength = time.getFinishHour() - time.getStartHour();
+                            userId=getIntent().getIntExtra("GET_USER_ID",100);
 
-                            Tasks tasks=new Tasks(taskPartET.getText().toString(), taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time);
+                            Tasks tasks=new Tasks(taskPartET.getText().toString(), taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time,userId);
                             Log.d(TAG+1, tasks.getDate().toString());
                             Log.d(TAG+2, tasks.getTime().toString());
                             tasks.saveToDB(MainActivity.this);
@@ -302,7 +310,8 @@ private void scheduleNotification(Notification notification, long delay) {
 
     private void refreshList() {
         Log.d(TAG, "refreshList");
-        ArrayList<Tasks> allTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
+        userId = getIntent().getIntExtra("GET_USER_ID", 100);
+        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
         String[] allTaskStrings= new String[allTasks.size()];
         for (int i = 0; i < allTasks.size(); i++) {
             boolean isCompleted = String.valueOf(allTasks.get(i).getCompleted()).compareTo("true") == 0;
@@ -369,9 +378,9 @@ private void scheduleNotification(Notification notification, long delay) {
 
     public void switchActivityToReg2(View view) {
 
-
         Intent intent = new Intent(MainActivity.this, RegisterActivity2.class);
-        intent.putExtra("GET_USER_ID", idForDB);
+        userId=getIntent().getIntExtra("GET_USER_ID",100);
+        intent.putExtra("GET_USER_ID", userId);
         intent.putExtra("purpose", "watch");
         startActivity(intent);
     }
