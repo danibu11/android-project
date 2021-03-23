@@ -8,27 +8,30 @@ public class Tasks {
     private String part;
     private int length;
     private int id;
+    private int userId;
     private String description;
     private MyDate date;
     private MyTime time;
     private boolean completed;
 
 
-    public Tasks(String part, int length, int id, String description, MyDate date, MyTime time) {
+    public Tasks(String part, int length, int id, String description, MyDate date, MyTime time,int userId) {
         Log.d("Tasks - object constructor", part+" "+ length+" "+ id+" "+ description+" "+ date.toString()+" "+ time.toString());
         this.part = part;
         this.length = length;
         this.id = id;
+        this.userId=userId;
         this.description = description;
         this.date = date;
         this.time = time;
         this.completed=false;
     }
 
-    public Tasks(String part, int length, int id, String description, String date, String time, String completed) {
+    public Tasks(String part, int length, int id, String description, String date, String time, String completed,int userId) {
         Log.d("Tasks - string constructor", part+" "+ length+" "+ id+" "+ description+" "+ date+" "+ time+" "+completed);
         this.part = part;
         this.length = length;
+        this.userId=userId;
         this.id = id;
         this.description = description;
         MyDate myDate = new MyDate(date);
@@ -59,9 +62,11 @@ public class Tasks {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) { this.id = id; }
+
+    public int getUserId() { return userId;}
+
+    public void setUserId(int userId) { this.userId = userId; }
 
     public String getDescription() {
         return description;
@@ -100,13 +105,14 @@ public class Tasks {
         Log.d(TAG, "saveToDB");
         String userDBString =
                 "(" + addTicksToStringForDB(String.valueOf(this.id)) + ","
+                        + addTicksToStringForDB(String.valueOf(this.userId)) + ","
                         + addTicksToStringForDB(this.description) + ","
                         + addTicksToStringForDB((this.part)) + ","
                         + addTicksToStringForDB(this.time.toString()) + ","
                         + addTicksToStringForDB(String.valueOf( this.length)) + ","
                         + addTicksToStringForDB(this.date.toString()) +  ","
                         + addTicksToStringForDB(String.valueOf(this.completed))+  ")";
-        String saveTaskQuery = "INSERT INTO tasks (taskId, description, part, time, length, date, completed ) VALUES " + userDBString;
+        String saveTaskQuery = "INSERT INTO tasks (taskId, userid, description, part, time, length, date, completed) VALUES " + userDBString;
         new DBHelper(context).getWritableDatabase().execSQL(saveTaskQuery);
     };
     public void deleteFromDB(Context context) {
@@ -123,6 +129,6 @@ public class Tasks {
 
     @Override
     public String toString() {
-        return "taskID= "+this.id +", part=" + part + ", length=" + length + ", description=" + description + '\'' + ", date=" + date + ", time=" + time + '}';
+        return "taskID= "+this.id +", part=" + part + ", length=" + length + ", description=" + description + '\'' + ", date=" + date + ", time=" + time +"UserId"+userId;
     }
 }

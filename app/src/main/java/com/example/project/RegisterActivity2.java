@@ -93,7 +93,7 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
             editStudyHelperBt.setVisibility(View.VISIBLE);
             goBackToMainBt.setVisibility(View.VISIBLE);
             Log.d("Register2",purpose);
-            ArrayList<StudyHelper> studyHelperArrayList = DBHelper.getStudyHelperFromDB(this);
+            ArrayList<StudyHelper> studyHelperArrayList = DBHelper.getStudyHelperFromDB(RegisterActivity2.this);
 
             userId = getIntent().getIntExtra("GET_USER_ID", 100);
             Log.d("Register2",userId+","+studyHelperArrayList.toString());
