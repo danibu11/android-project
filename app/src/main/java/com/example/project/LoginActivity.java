@@ -17,6 +17,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText emailField, passwordField;
     Button loginButton, registerButton;
     static String email, userName;//for moving them between intents
+    int idForDb;
 
 
     @Override
@@ -95,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                     isValidCredentials = true;
                     //save the full name of the user name for later use.
                     userName = (allUsers.get(i).getF_name()+" "+allUsers.get(i).getL_name());
+                    idForDb = allUsers.get(i).getId();
 
                 }
             }
@@ -105,8 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("GET_EMAIL", email);
-        intent.putExtra("GET_FULL_NAME", userName);
+        intent.putExtra("GET_USER_ID", idForDb);
         startActivity(intent);
     }
 
