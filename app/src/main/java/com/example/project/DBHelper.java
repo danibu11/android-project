@@ -102,11 +102,11 @@ public class DBHelper extends SQLiteOpenHelper {
         // for each table entry - we create an instance of User and push it into the result ArrayList
         while(c.isAfterLast() == false){
             studyHelperTable.add(new StudyHelper( // extracting values from current entry - constructing a User Object and pushing it into the result ArrayList
-                    Integer.parseInt(String.valueOf(c.getColumnIndex("userId"))),
+                    Integer.parseInt(String.valueOf(c.getColumnIndex("userid"))),
                     Boolean.parseBoolean(c.getString(c.getColumnIndex("a_d_d"))),
                     Boolean.parseBoolean(c.getString(c.getColumnIndex("a_d_h_d"))),
-                    Boolean.parseBoolean(String.valueOf(c.getColumnIndex("ritalin"))),
-                    Boolean.parseBoolean(String.valueOf(c.getColumnIndex("konserta"))),
+                    Boolean.parseBoolean(c.getString(c.getColumnIndex("ritalin"))),
+                    Boolean.parseBoolean(c.getString(c.getColumnIndex("konserta"))),
                     Integer.parseInt(c.getString (c.getColumnIndex("mealsPerDay")))));
             c.moveToNext();
         }

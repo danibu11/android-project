@@ -94,20 +94,21 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
             goBackToMainBt.setVisibility(View.VISIBLE);
             Log.d("Register2",purpose);
             ArrayList<StudyHelper> studyHelperArrayList = DBHelper.getStudyHelperFromDB(this);
+
             userId = getIntent().getIntExtra("GET_USER_ID", 100);
+            Log.d("Register2",userId+","+studyHelperArrayList.toString());
+
+
             for (int i=0; i<studyHelperArrayList.size(); i++){
+                Log.d("checking for Register 2 watch",userId+","+studyHelperArrayList.get(i).getUserId());
                 if(userId == studyHelperArrayList.get(i).getUserId()){
                     Log.d("Register2 when watch","filling the radio btns");
                     a_d_dButton.setChecked(studyHelperArrayList.get(i).isAdd());
                     adhdButton.setChecked(studyHelperArrayList.get(i).isAdhd());
                     ritalinButton.setChecked(studyHelperArrayList.get(i).isRitalin());
                     konsertaButton.setChecked(studyHelperArrayList.get(i).isKonserta());
-                    if(studyHelperArrayList.get(i).getMealsPerDay() == 1)
-                        spinner.setPromptId(0);
-                    else if(studyHelperArrayList.get(i).getMealsPerDay() == 2)
-                        spinner.setPromptId(1);
-                    else
-                        spinner.setPromptId(2);
+                    //here we should initiate the spinner from the valeu we get
+                    spinner.setSelection(studyHelperArrayList.get(i).getMealsPerDay()-1);
                 }
             }
         }
@@ -211,8 +212,6 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     public void endRegFunc(View view) {
         userId= getIntent().getIntExtra("GET_USER_ID",100);
         Log.d("Register2", ""+userId);
-
-
         StudyHelper studyHelper=new StudyHelper(userId, a_d_dButton.isChecked(), adhdButton.isChecked(),ritalinButton.isChecked(),konsertaButton.isChecked(),spinnerResult);
         try {
             Log.d("Regiter2", "      "+studyHelper.toString());
@@ -234,7 +233,9 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
         }
         if(purpose.equals("edit")){
             Log.d("reg2","if 2");
+            userId = getIntent().getIntExtra("GET_USER_ID",100);
             Intent intent = new Intent(RegisterActivity2.this, MainActivity.class);
+            intent.putExtra("GET_USER_ID", userId);
             startActivity(intent);
         }
         else {
@@ -245,7 +246,10 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     }
 
     public void returnToMainFunc(View view) {
+        userId = getIntent().getIntExtra("GET_USER_ID",100);
         Intent intent = new Intent(RegisterActivity2.this, MainActivity.class);
+        intent.putExtra("GET_USER_ID", userId);
+
         startActivity(intent);
 
     }

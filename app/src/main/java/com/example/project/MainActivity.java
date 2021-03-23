@@ -127,8 +127,15 @@ public class MainActivity extends AppCompatActivity {
         task4 = findViewById(R.id.task4);
         task5 = findViewById(R.id.task5);
 
-        fullNameText = getIntent().getStringExtra("GET_FULL_NAME");
-        emailText = getIntent().getStringExtra("GET_EMAIL");
+        ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
+        idForDB = getIntent().getIntExtra("GET_USER_ID", 100);
+        for (int i = 0; i < allUsers.size(); i++) {
+            if (allUsers.get(i).getId() == idForDB) {
+                fullNameText = "Hello "+allUsers.get(i).getF_name()+" "+allUsers.get(i).getL_name();
+                emailText = "      "+allUsers.get(i).getEmail();
+
+            }
+        }
 
         editUserInfoBtn = findViewById(R.id.editStudyHelperBtn);
         fullNameTV = findViewById(R.id.fullNameTV);
