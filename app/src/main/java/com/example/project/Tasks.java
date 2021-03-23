@@ -109,6 +109,12 @@ public class Tasks {
         String saveTaskQuery = "INSERT INTO tasks (taskId, description, part, time, length, date, completed ) VALUES " + userDBString;
         new DBHelper(context).getWritableDatabase().execSQL(saveTaskQuery);
     };
+    public void deleteFromDB(Context context) {
+        Log.d(TAG, "Deleted");
+        String deleteTaskRecordQuery = "DELETE FROM tasks WHERE tasks.taskId="+String.valueOf(this.id);
+        new DBHelper(context).getWritableDatabase().execSQL(deleteTaskRecordQuery);
+    }
+
 
     private String addTicksToStringForDB(String inputString) {
         return "'"+inputString+"'";
