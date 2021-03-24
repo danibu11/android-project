@@ -197,11 +197,13 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 updateStartTime(hourOfDay, minute);
+                                editStartTimeBtn.setText(String.valueOf(selectedStartHour)+":"+String.valueOf(selectedStartMinute));
                                 Log.d(TAG, "selected start time: "+selectedStartMinute+" "+selectedStartHour);
                             }
                         },selectedStartHour,selectedStartMinute,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
 
                         timePickerDialog.show();
+
                     }
                 });
                 Log.d(TAG, "selected start time: "+selectedStartMinute+" "+selectedStartHour);
@@ -215,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 updateEndTime(hourOfDay, minute);
+                                editEndTimeBtn.setText(String.valueOf(selectedEndHour)+":"+String.valueOf(selectedEndMinute));
                                 Log.d(TAG, "selected end time: "+selectedEndMinute+" "+selectedEndHour);
                             }
                         },selectedEndHour,selectedEndMinute,android.text.format.DateFormat.is24HourFormat(MainActivity.this));
@@ -229,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                                 Log.d("SELECTED DATE IN ADDTASK LISTENER", dayOfMonth+" "+month+" "+yearForDate);
                                 updateDateStamp(year, month, dayOfMonth);
+                                editDateBtn.setText(String.valueOf(day)+"/"+String.valueOf(month+1)+"/"+String.valueOf(yearForDate));
                             }
                         },currentYearForDate,currentMonth,currentDay);
                         datePickerDialog.show();
