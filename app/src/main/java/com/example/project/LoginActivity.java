@@ -108,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
     private void goToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra("GET_USER_ID", idForDb);
+        intent.putExtra("purpose","ss");
         startActivity(intent);
     }
 

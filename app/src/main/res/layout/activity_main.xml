@@ -113,4 +113,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/sortListBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:onClick="popUpForListView"
+        android:text="sort list"
+        app:layout_constraintBottom_toTopOf="@+id/taskList"
+        app:layout_constraintEnd_toEndOf="@+id/taskList"
+        app:layout_constraintStart_toStartOf="@+id/taskList" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

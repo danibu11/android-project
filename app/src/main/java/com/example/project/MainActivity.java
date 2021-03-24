@@ -3,11 +3,9 @@ package com.example.project;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -24,7 +22,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -34,24 +31,21 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity"; //for logging
     TextView fullNameTV, emailTV, todayTasks, task1, task2, task3, task4, task5;
     ListView taskList;
     EditText taskDiscriptionET, taskPartET;
-    Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn, editUserInfoBtn;
+    Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn, editUserInfoBtn, sortListBtn;
     String fullNameText, emailText;
     int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate,userId;
     ArrayAdapter<String> adapter;
     AlertDialog dialog = null;
     String notificationChannelId = "disOrder_notification_id";
-
 
 
 
@@ -89,10 +83,15 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "😀 NOT EQUALS, DIFF: "+diff, Toast.LENGTH_LONG).show();
         }*/
         ////
+        sortListBtn = findViewById(R.id.sortListBtn);
         FloatingActionButton fab = findViewById(R.id.fab);
         taskList = findViewById(R.id.taskList);
         userId = getIntent().getIntExtra("GET_USER_ID", 100);
-        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
+
+
+
+
+        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this, userId);
         String[] allTaskStrings= new String[allTasks.size()];
         for (int i = 0; i < allTasks.size(); i++) {
             boolean isCompleted = String.valueOf(allTasks.get(i).getCompleted()).compareTo("true") == 0;
@@ -103,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         // this is what happens when we press an item on the list
         refreshList();
+
+
+
 
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
                         switch (iditem) {
                             case R.id.showT:
                                 Log.d("popmenu ", "Show Task"+""+position);
+                                Tasks taskToSave = new Tasks(allTasks.get(position));
+                                allTasks.get(position).deleteFromDB(MainActivity.this);
+                                taskToSave.saveToDB(MainActivity.this);
                                 break;
                             case R.id.delT:
                                 allTasks.get(position).deleteFromDB(MainActivity.this);
@@ -246,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
                             MyDate date=new MyDate(day,month,yearForDate);
                             MyTime time=new MyTime(selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute);
                             long timeTillTaskInMilliseconds = getTimeTillTaskInMilliseconds(date, time);
+                            Log.d(TAG, String.valueOf(timeTillTaskInMilliseconds));
                             scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeTillTaskInMilliseconds);
                             Log.d(TAG, time.toString()+" "+date.toString());
                             taskLength = time.getFinishHour() - time.getStartHour();
@@ -290,8 +296,7 @@ private void scheduleNotification(Notification notification, long delay) {
     notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
     notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-    long futureInMillis = (-1) * (SystemClock.elapsedRealtime() + delay);
+    long futureInMillis =  (SystemClock.elapsedRealtime() + delay);
     AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
     alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     Toast.makeText(MainActivity.this, "scheduled task notification to; "+futureInMillis+"milliseconds from now", Toast.LENGTH_LONG).show();
@@ -318,6 +323,20 @@ private void scheduleNotification(Notification notification, long delay) {
             Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasks.get(i).getId(), String.valueOf(allTasks.get(i).getCompleted()));
             String statusSymbol = isCompleted ? "✅" : "❌";
             allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + statusSymbol;
+        }
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
+        taskList.setAdapter(adapter); //re-set the list`s adapter
+    }
+
+    private void refreshList2(ArrayList<Tasks> tasksForShow) {
+        Log.d(TAG, "refreshList");
+        userId = getIntent().getIntExtra("GET_USER_ID", 100);
+        String[] allTaskStrings= new String[tasksForShow.size()];
+        for (int i = 0; i < tasksForShow.size(); i++) {
+            boolean isCompleted = String.valueOf(tasksForShow.get(i).getCompleted()).compareTo("true") == 0;
+            Log.d("EVALUATING TASK COMPLETION FOR TASK " + tasksForShow.get(i).getId(), String.valueOf(tasksForShow.get(i).getCompleted()));
+            String statusSymbol = isCompleted ? "✅" : "❌";
+            allTaskStrings[i] = tasksForShow.get(i).getDescription() + " - " + statusSymbol;
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         taskList.setAdapter(adapter); //re-set the list`s adapter
@@ -383,6 +402,78 @@ private void scheduleNotification(Notification notification, long delay) {
         intent.putExtra("GET_USER_ID", userId);
         intent.putExtra("purpose", "watch");
         startActivity(intent);
+    }
+
+    public void popUpForListView(View view) {
+        userId=getIntent().getIntExtra("GET_USER_ID",100);
+        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
+
+        PopupMenu popupMenu2=new PopupMenu(MainActivity.this,view);
+        popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int iditem = item.getItemId() ;
+                ArrayList<Tasks> tasksForShow = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
+                String[] allTaskStrings= null;
+                switch (iditem) {
+                    case R.id.showNotFinishTask:
+                        for(int i = 0; i<allTasks.size(); i++){
+                            if(allTasks.get(i).getCompleted()==false){
+                                tasksForShow.add(allTasks.get(i));
+                                Log.d("popup2 check "+i , tasksForShow.get(i).toString());
+                            }
+                        }
+
+                        refreshList2(tasksForShow);
+                        break;
+
+                    case R.id.showFinishTask:
+                        for(int i = 0; i<allTasks.size(); i++){
+                            if(allTasks.get(i).getCompleted()==true){
+                                tasksForShow.add(allTasks.get(i));
+                            }
+                        }
+
+                        refreshList2(tasksForShow);
+                        break;
+
+                    case R.id.showTodayTask:
+                        Calendar calendar=Calendar.getInstance();
+                        currentDay=calendar.get(Calendar.DAY_OF_MONTH);
+                        currentYearForDate=calendar.get(Calendar.YEAR);
+                        currentMonth=calendar.get(Calendar.MONTH);
+                        Calendar today=Calendar.getInstance();
+                        today.set(currentYearForDate, currentMonth, currentDay);
+                        Calendar taskDay=Calendar.getInstance();
+                        for(int i = 0; i<allTasks.size(); i++){
+                            if(allTasks.get(i).getCompleted()==false){
+                                Tasks currentTask = allTasks.get(i);
+                                taskDay.set(currentTask.getDate().getYear(), currentTask.getDate().getMounth(), currentTask.getDate().getDay());
+                                Log.d("popup2", taskDay.get(Calendar.DAY_OF_MONTH)+", "+today.get(Calendar.DAY_OF_MONTH));
+                                if(today.equals(taskDay)){
+                                    tasksForShow.add(allTasks.get(i));
+                                    Log.d("popup2 check "+i , tasksForShow.get(i).toString());
+
+                                }
+                            }
+                        }
+
+                        refreshList2(tasksForShow);
+                        break;
+                }
+
+                return true;
+            }
+
+        });
+
+
+
+        popupMenu2.inflate(R.menu.pop_up_show2);
+        popupMenu2.show();
+
+
+
     }
 }
 /*

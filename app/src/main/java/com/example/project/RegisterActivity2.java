@@ -236,11 +236,13 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
             userId = getIntent().getIntExtra("GET_USER_ID",100);
             Intent intent = new Intent(RegisterActivity2.this, MainActivity.class);
             intent.putExtra("GET_USER_ID", userId);
+            intent.putExtra("purpose","ss");
             startActivity(intent);
         }
         else {
             Log.d("reg2","else 2");
             Intent intent = new Intent(RegisterActivity2.this, LoginActivity.class);
+            intent.putExtra("GET_USER_ID", userId);
             startActivity(intent);
         }
     }
@@ -248,6 +250,7 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     public void returnToMainFunc(View view) {
         userId = getIntent().getIntExtra("GET_USER_ID",100);
         Intent intent = new Intent(RegisterActivity2.this, MainActivity.class);
+        intent.putExtra("purpose","ss");
         intent.putExtra("GET_USER_ID", userId);
 
         startActivity(intent);

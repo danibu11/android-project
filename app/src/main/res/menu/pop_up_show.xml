@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/showT"
-        android:title="Show Task " />
+        android:title="finish task" />
 
     <item
         android:id="@+id/delT"
