@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private final String TAG = "DBHelper"; //for logging
     String CREATE_TASKS_TABLE = "CREATE TABLE tasks(taskId TEXT PRIMARY KEY, userId TEXT, description TEXT, part TEXT, time TEXT, length TEXT, date TEXT, completed TEXT)";
     String CREATE_USERS_TABLE = "CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT, firstName TEXT, lastName TEXT, region TEXT, language TEXT, id TEXT, age TEXT)";
-    String CREATE_STUDYHELPER_TABLE = "CREATE TABLE studyHelper( userid TEXT PRIMARY KEY, a_d_d TEXT , a_d_h_d TEXT,ritalin TEXT, konserta TEXT, mealsPerDay TEXT)";
+    String CREATE_STUDYHELPER_TABLE = "CREATE TABLE studyHelper( userid TEXT PRIMARY KEY NOT NULL, a_d_d TEXT , a_d_h_d TEXT,ritalin TEXT, konserta TEXT, mealsPerDay TEXT)";
 
     String INSERT_ADMIN_USER = "INSERT INTO users (email, password, firstName, lastName, region, language, id, age) VALUES ('admin@gm.cc', 'admin', 'admin', 'admin', 'israel', 'english', '0', '69420')";
     String INSERT_ADMIN_TASK = "INSERT INTO tasks (taskId ,userId, description , part , time , length , date , completed ) VALUES ('0','0', 'admin', '1', '11:11:11:11', '0', '11/11/11', 'false')";
@@ -87,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     c.getString(c.getColumnIndex("date")),
                     c.getString(c.getColumnIndex("time")),
                     c.getString (c.getColumnIndex("completed")),
-                    Integer.parseInt(String.valueOf(c.getColumnIndex("userId")))));
+                    Integer.parseInt(c.getString(c.getColumnIndex("userId")))));
             c.moveToNext();
         }
         return allTasks;
@@ -124,7 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // for each table entry - we create an instance of User and push it into the result ArrayList
         while(c.isAfterLast() == false){
             studyHelperTable.add(new StudyHelper( // extracting values from current entry - constructing a User Object and pushing it into the result ArrayList
-                    Integer.parseInt(String.valueOf(c.getColumnIndex("userid"))),
+                    Integer.parseInt(c.getString(c.getColumnIndex("userid"))),
                     Boolean.parseBoolean(c.getString(c.getColumnIndex("a_d_d"))),
                     Boolean.parseBoolean(c.getString(c.getColumnIndex("a_d_h_d"))),
                     Boolean.parseBoolean(c.getString(c.getColumnIndex("ritalin"))),

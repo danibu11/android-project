@@ -81,7 +81,7 @@ public class StudyHelper {
                         + addTicksToStringForDB(String.valueOf(this.ritalin)) + ","
                         + addTicksToStringForDB(String.valueOf(this.konserta) )+ ","
                         + addTicksToStringForDB(String.valueOf(this.mealsPerDay))+ ")";
-        String saveUserQuery = "INSERT INTO studyHelper ( userid, a_d_d , a_d_h_d,ritalin,konserta,mealsPerDay) VALUES " + userDBString;
+        String saveUserQuery = "INSERT INTO studyHelper ( userid, a_d_d , a_d_h_d, ritalin, konserta, mealsPerDay) VALUES " + userDBString;
         new DBHelper(context).getWritableDatabase().execSQL(saveUserQuery);
     };
 

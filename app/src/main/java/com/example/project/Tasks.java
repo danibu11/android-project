@@ -3,7 +3,9 @@ package com.example.project;
 import android.content.Context;
 import android.util.Log;
 
-public class Tasks {
+import java.io.Serializable;
+
+public class Tasks implements Serializable {
     private static final String TAG = "TASKS"; //for logging
     private String part;
     private int length;
@@ -39,6 +41,19 @@ public class Tasks {
         MyTime myTime = new MyTime(time);
         this.time = myTime;
         this.completed = Boolean.parseBoolean(completed);
+    }
+
+    public Tasks(Tasks tasks) {
+        this.part = tasks.getPart();
+        this.length =tasks.getLength();
+        this.userId = tasks.getUserId();
+        this.id = tasks.getId();
+        this.description = tasks.getDescription();
+        MyDate myDate = new MyDate(tasks.getDate().getDay(), tasks.getDate().getMounth(), tasks.getDate().getYear());
+        this.date = myDate;
+        MyTime myTime = new MyTime(tasks.getTime().toString());
+        this.time=myTime;
+        this.completed= true;
     }
 
 
