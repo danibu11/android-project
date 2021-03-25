@@ -257,47 +257,58 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         try{
+                            // parsing task data to date and time objects
                             ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
                             idForTasks = currentTasks.size() + 1;
                             Log.d("myDate ctor payload", day+" "+month+" "+yearForDate);
                             MyDate date=new MyDate(day,month,yearForDate);
                             MyTime time=new MyTime(selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute);
-                           // long timeTillTaskInMilliseconds = getTimeTillTaskInMilliseconds(date, time);
-                            //Log.d(TAG, String.valueOf((((time.getFinishHour()*3600)-((time.getStartHour())*3600))+((time.getFinishMins()-time.getStartMins())*60)) *1000)));
+                            // calculate task time-until-start for the notification delay
                             Calendar c = Calendar.getInstance();
                             long timeUntilNotifPop = ((time.getStartHour())*3600*1000 + (time.getStartMins())*60*1000)-((c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000)-c.getTime().getSeconds()*1000;
                             Log.d(TAG, "onClickcurtime: "+timeUntilNotifPop);
                             scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeUntilNotifPop);
+                            scheduleNotification(getNotification("Your next task begins in 15 minutes!", "DisOrder Pre-Task Reminder"), timeUntilNotifPop - (15*60*1000));
                             Log.d(TAG, time.toString()+" "+date.toString());
+                           // calculate task length
                             taskLength = (((time.getFinishHour()*3600)-((time.getStartHour())*3600))+((time.getFinishMins()-time.getStartMins())*60)) *1000;
                             userId=getIntent().getIntExtra("GET_USER_ID",100);
                             for (StudyHelper sh: DBHelper.getStudyHelperFromDB(getApplicationContext())) {
-                                if(sh.getUserId() == userId){
-                                if(sh.isRitalin())
-                                    scheduleNotification(getNotification("Take a Ritalin pill", "Disorder Task Notification!"), 1800000);
-                                if(sh.isKonserta())
-                                    scheduleNotification(getNotification("Take a Konserta pill", "Disorder Task Notification!"), 2700000);
-
-                                    switch(sh.getMealsPerDay()){
-                                        case 1:
-                                            scheduleNotification(getNotification("Eat your Only Meal :)", "Disorder Task Notification!"),  12*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
-                                            break;
-
-                                        case 2:
-                                            scheduleNotification(getNotification("Eat your Breakfast Meal :)", "Disorder Task Notification!"),  9*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
-                                            scheduleNotification(getNotification("Eat your Lunch Meal :)", "Disorder Task Notification!"),  12*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
-                                            break;
-
-                                        case 3:
-                                            scheduleNotification(getNotification("Eat your Breakfast Meal :)", "Disorder Task Notification!"),  9*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
-                                            scheduleNotification(getNotification("Eat your Lunch Meal :)", "Disorder Task Notification!"),  12*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
-                                            scheduleNotification(getNotification("Eat your Dinner Meal :)", "Disorder Task Notification!"),  18*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
-                                    }
+                                    if(sh.getUserId() == userId) {
+                                        if(sh.isRitalin() || sh.isKonserta()) {
+                                            String pillType = sh.isRitalin() ? "Ritalin" : "Konserta";
+                                            scheduleNotification(getNotification("Take your " + pillType + " pill!", "DisOrder Pre-Task Reminder"), timeUntilNotifPop - (40*60*1000));
+                                        }
+                                        // setting meal-related notifications for this task, according to study helper data
+                                        switch (sh.getMealsPerDay()) {
+                                            case 1:
+                                                scheduleNotification(getNotification("Eat your Only Meal :)", "Disorder Task Notification!"), timeUntilNotifPop + (taskLength/2));
+                                                break;
+                                            case 2:
+                                                long twoMealInterval = taskLength / 3;
+                                                scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + twoMealInterval);
+                                                scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (twoMealInterval * 2));
+                                                break;
+                                            case 3:
+                                                long threeMealInterval = taskLength / 4;
+                                                scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + threeMealInterval);
+                                                scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (threeMealInterval * 2));
+                                                scheduleNotification(getNotification("Eat your Dinner :)", "Disorder Task Notification!"), timeUntilNotifPop + (threeMealInterval * 3));
+                                        }
+                                        // setting break-related notifications for this task, according to study helper data
+                                        if (sh.isAdhd() || sh.isAdd()) {
+                                            long threeMealInterval = taskLength / 6;
+                                            // stretching notif
+                                            scheduleNotification(getNotification("stretch for 5 minutes", "Disorder Study Helper Notification"), timeUntilNotifPop + threeMealInterval);
+                                            scheduleNotification(getNotification("stretch for 5 minutes", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 3));
+                                            // break notif
+                                            scheduleNotification(getNotification("take a coffee break (15-20 min)", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 3));
+                                            // motivation notif
+                                            scheduleNotification(getNotification("Stop watching Cats on Youtube!", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 3) + 5*60*1000);
+                                            scheduleNotification(getNotification("snack time", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 5));
+                                        }
                                     }
                                 }
-
-
-
 
                             if(taskDiscriptionET.getText().toString().equals("")){
                                 Toast.makeText(MainActivity.this, "you must have description for your task", Toast.LENGTH_LONG).show();
