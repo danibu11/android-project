@@ -100,21 +100,20 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void reg2(View view) {
         ArrayList<User> currentTasks = DBHelper.getAllUsersFromDB(RegisterActivity.this);
-        idForDB = currentTasks.size() ;
-        FirstName=regFName();
-        LastName=regLName();
-        age=regAge();
-        Region=regRegion();
-        Lang=regLang();
-        Pass=regPass();
-        Email=regEmail();
+        idForDB = currentTasks.size();
+        FirstName = regFName();
+        LastName = regLName();
+        age = regAge();
+        Region = regRegion();
+        Lang = regLang();
+        Pass = regPass();
+        Email = regEmail();
+        String emailPattern = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
         User user = new User(idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
 
-        Log.d("user detail after creation",""+Email+" "+FirstName);
+        Log.d("user detail after creation", "" + Email + " " + FirstName);
         if (isUserExist(Email))
-        {
-
-            //TOAST "please select another email, user already exists"
+        {//TOAST "please select another email, user already exists"
             Toast.makeText(RegisterActivity.this,"please select another Email, user already exists",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -130,10 +129,12 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this,"plese enter your first name",Toast.LENGTH_SHORT).show();
             return;
         }
-
-
-        else {
-            //user = new User(idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
+        if (Email.matches(emailPattern))
+            Toast.makeText(getApplicationContext(), "Valid email address", Toast.LENGTH_SHORT).show();
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+            return ;
         }
 
         Log.d("CREATE", "OK");
