@@ -13,6 +13,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             boolean isCompleted = String.valueOf(allTasksForUser.get(i).getCompleted()).compareTo("true") == 0;
             Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasksForUser.get(i).getId(), String.valueOf(allTasksForUser.get(i).getCompleted()));
             String statusSymbol = isCompleted ? "✅" : "❌";
-            allTaskStrings[i] = allTasksForUser.get(i).getDescription() + " - " + statusSymbol; // this is what's going to be displayed in the list row
+            allTaskStrings[i] =allTasksForUser.get(i).getDescription() +"    "+ statusSymbol; // this is what's going to be displayed in the list row
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         // this is what happens when we press an item on the list
@@ -122,20 +123,24 @@ public class MainActivity extends AppCompatActivity {
                                 Tasks taskToSave = new Tasks(allTasks.get(position));
                                 allTasks.get(position).deleteFromDB(MainActivity.this);
                                 taskToSave.saveToDB(MainActivity.this);
+                                recreate();
                                 break;
-                            case R.id.delT:
-                                allTasks.get(position).deleteFromDB(MainActivity.this);
-                                Log.d ("delpop", "Del Task");
+                            case R.id.delT:AlertDialog diaBox = AskOption(position);
+                                diaBox.show();
+
                                 break;
                         }
-                        recreate();
+
+
                         return true;
+
                     }
 
                 });
 
                 popupMenu.inflate(R.menu.pop_up_show);
                 popupMenu.show();
+
 
     /*
         the position you get here is the position in the list
@@ -395,7 +400,7 @@ private void scheduleNotification(Notification notification, long delay) {
     }
 
 
-    //as straightforward as can be
+        //as straightforward as can be
     public void deleteDB(){
         Log.d(TAG, "delete DB");
         this.deleteDatabase("buchnitzDB");
@@ -481,7 +486,40 @@ private void scheduleNotification(Notification notification, long delay) {
 
 
     }
-}
+    private AlertDialog AskOption(int optin)
+    {
+        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
+        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(this)
+                // set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Do you want to Delete : " + allTasks.get(optin).getPart()+". "+allTasks.get(optin).getDescription()+"   "+allTasks.get(optin).getDate())
+                .setIcon(R.drawable.ic_launcher_background)
+
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        allTasks.get(optin).deleteFromDB(MainActivity.this);
+                        Log.d ("delpop", "Del Task");
+
+                        dialog.dismiss();
+                        recreate();
+                    }
+
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+
+        return myQuittingDialogBox;
+
+    }}
 /*
 check your current branch name and status at any time (git status)
 //new task

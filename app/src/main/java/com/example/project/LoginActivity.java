@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (validateCredentials(email, password)) {
                     Toast.makeText(LoginActivity.this, credentials, Toast.LENGTH_SHORT).show();
                     goToMainPage();
+
                 } else {
                     Toast.makeText(LoginActivity.this, "Invalid Credentials! please sign up or try again", Toast.LENGTH_LONG).show();
                 }
@@ -106,10 +107,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void goToMainPage() {
+
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra("GET_USER_ID", idForDb);
         intent.putExtra("diffrentTasks","ss");
         startActivity(intent);
+        emailField.setText("");
+        passwordField.setText("");
     }
 
     public void registerFunc(View view) {
