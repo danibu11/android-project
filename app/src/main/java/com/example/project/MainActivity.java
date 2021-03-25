@@ -276,20 +276,24 @@ public class MainActivity extends AppCompatActivity {
                             for (StudyHelper sh: DBHelper.getStudyHelperFromDB(getApplicationContext())) {
                                     if(sh.getUserId() == userId) {
                                         if(sh.isRitalin() || sh.isKonserta()) {
+                                            Log.d(TAG, "RITALIN/KONSERTA TRUE");
                                             String pillType = sh.isRitalin() ? "Ritalin" : "Konserta";
                                             scheduleNotification(getNotification("Take your " + pillType + " pill!", "DisOrder Pre-Task Reminder"), timeUntilNotifPop - (40*60*1000));
                                         }
                                         // setting meal-related notifications for this task, according to study helper data
                                         switch (sh.getMealsPerDay()) {
                                             case 1:
+                                                Log.d(TAG, "getMealsPerDay 1");
                                                 scheduleNotification(getNotification("Eat your Only Meal :)", "Disorder Task Notification!"), timeUntilNotifPop + (taskLength/2));
                                                 break;
                                             case 2:
+                                                Log.d(TAG, "getMealsPerDay 2");
                                                 long twoMealInterval = taskLength / 3;
                                                 scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + twoMealInterval);
                                                 scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (twoMealInterval * 2));
                                                 break;
                                             case 3:
+                                                Log.d(TAG, "getMealsPerDay 3");
                                                 long threeMealInterval = taskLength / 4;
                                                 scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + threeMealInterval);
                                                 scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (threeMealInterval * 2));
@@ -297,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         // setting break-related notifications for this task, according to study helper data
                                         if (sh.isAdhd() || sh.isAdd()) {
+                                            Log.d(TAG, "isAdhd TRUE");
                                             long threeMealInterval = taskLength / 6;
                                             // stretching notif
                                             scheduleNotification(getNotification("stretch for 5 minutes", "Disorder Study Helper Notification"), timeUntilNotifPop + threeMealInterval);
