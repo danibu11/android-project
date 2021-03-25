@@ -5,6 +5,8 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="12dp"
+    android:textAlignment="gravity"
     tools:context=".MainActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -13,9 +15,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:fabSize="normal"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/design_default_color_error"
         android:elevation="6dp"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
@@ -24,8 +26,8 @@
         android:id="@+id/fullNameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="4dp"
+        android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +36,8 @@
         android:id="@+id/emailTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="25dp"
+        android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/fullNameTV"
         app:layout_constraintTop_toBottomOf="@+id/fullNameTV" />
@@ -43,85 +46,59 @@
         android:id="@+id/todayTasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="25dp"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/emailTV"
         app:layout_constraintTop_toBottomOf="@+id/emailTV" />
 
-    <TextView
-        android:id="@+id/task1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="198dp"
-        android:layout_marginEnd="27dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/task2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="@+id/task1"
-        app:layout_constraintStart_toStartOf="@+id/task1"
-        app:layout_constraintTop_toBottomOf="@+id/task1" />
-
-    <TextView
-        android:id="@+id/task3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="@+id/task2"
-        app:layout_constraintStart_toStartOf="@+id/task2"
-        app:layout_constraintTop_toBottomOf="@+id/task2" />
-
-    <TextView
-        android:id="@+id/task4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        app:layout_constraintEnd_toEndOf="@+id/task3"
-        app:layout_constraintStart_toStartOf="@+id/task3"
-        app:layout_constraintTop_toBottomOf="@+id/task3" />
-
-    <TextView
-        android:id="@+id/task5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/task4"
-        app:layout_constraintStart_toStartOf="@+id/task4"
-        app:layout_constraintTop_toBottomOf="@+id/task4" />
-
     <ListView
         android:id="@+id/taskList"
-        android:layout_width="217dp"
-        android:layout_height="242dp"
+        android:layout_width="299dp"
+        android:layout_height="329dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task5" />
+        app:layout_constraintHorizontal_bias="0.116"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/editStudyHelperBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:layout_marginEnd="72dp"
-        android:text="edit information"
-        android:onClick="switchActivityToReg2"
+        android:layout_marginTop="272dp"
+        android:background="@android:drawable/divider_horizontal_textfield"
+        android:backgroundTint="@android:color/holo_red_light"
 
-        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="10dp"
+        android:onClick="switchActivityToReg2"
+        android:text="edit information"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/sortListBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:drawable/divider_horizontal_textfield"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:elevation="10dp"
         android:onClick="popUpForListView"
+        android:shadowColor="@color/design_default_color_on_secondary"
+        android:shadowDy="?android:attr/spotShadowAlpha"
         android:text="sort list"
         app:layout_constraintBottom_toTopOf="@+id/taskList"
-        app:layout_constraintEnd_toEndOf="@+id/taskList"
-        app:layout_constraintStart_toStartOf="@+id/taskList" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/emptyListTV"
+        android:layout_width="390dp"
+        android:layout_height="76dp"
+        android:layout_marginEnd="21dp"
+        android:text="your task list is empty please press \non th plus (+) to add new tasks"
+        android:textSize="24sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

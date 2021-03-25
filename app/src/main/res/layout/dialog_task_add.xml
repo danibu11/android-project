@@ -9,36 +9,31 @@
         android:id="@+id/descriptionET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="99dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="99dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="96dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/description"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/partET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="99dp"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="99dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/part_of_task"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="@+id/descriptionET"
         app:layout_constraintTop_toBottomOf="@+id/descriptionET" />
 
     <Button
         android:id="@+id/startTimeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="71dp"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="64dp"
+        android:background="@android:drawable/alert_light_frame"
         android:onClick="startTimePickerFunc"
         android:text="@string/start_time"
         app:layout_constraintBottom_toBottomOf="@+id/endTimeBtn"
@@ -48,10 +43,11 @@
 
     <Button
         android:id="@+id/endTimeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="88dp"
+        android:layout_marginEnd="64dp"
+        android:background="@android:drawable/alert_light_frame"
         android:onClick="endTimePickerFunc"
         android:text="@string/end_time"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,24 +55,40 @@
 
     <Button
         android:id="@+id/dateBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="160dp"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="28dp"
+        android:background="@android:drawable/alert_light_frame"
         android:onClick="datePickerFunc"
         android:text="@string/date"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/endTimeBtn"
+        app:layout_constraintStart_toStartOf="@+id/startTimeBtn"
         app:layout_constraintTop_toBottomOf="@+id/startTimeBtn" />
 
     <Button
         android:id="@+id/addTaskBtn"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="64dp"
+        android:background="@android:drawable/alert_light_frame"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:text="add task"
+        app:layout_constraintEnd_toEndOf="@+id/dateBtn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/dateBtn"
+        app:layout_constraintTop_toBottomOf="@+id/dateBtn" />
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="160dp"
-        android:text="add task"
+        android:layout_marginEnd="80dp"
+        android:background="?android:attr/textCursorDrawable"
+        android:backgroundTint="#81DDEC"
+        android:text="Add Task Page"
+        android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateBtn" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
