@@ -56,6 +56,7 @@
         android:id="@+id/taskList"
         android:layout_width="299dp"
         android:layout_height="329dp"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.116"
@@ -64,31 +65,32 @@
     <Button
         android:id="@+id/editStudyHelperBtn"
         android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="272dp"
-        android:background="@android:drawable/divider_horizontal_textfield"
-        android:backgroundTint="@android:color/holo_red_light"
+        android:layout_height="60dp"
+        android:background="@android:drawable/alert_light_frame"
+        android:backgroundTint="#F8D7D7"
 
         android:elevation="10dp"
         android:onClick="switchActivityToReg2"
         android:text="edit information"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/backToLogin" />
 
     <Button
         android:id="@+id/sortListBtn"
         android:layout_width="130dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginBottom="20dp"
-        android:background="@android:drawable/divider_horizontal_textfield"
-        android:backgroundTint="@android:color/holo_red_light"
+        android:background="@android:drawable/alert_light_frame"
+        android:backgroundTint="#F8D7D7"
         android:elevation="10dp"
         android:onClick="popUpForListView"
         android:shadowColor="@color/design_default_color_on_secondary"
         android:shadowDy="?android:attr/spotShadowAlpha"
         android:text="sort list"
         app:layout_constraintBottom_toTopOf="@+id/taskList"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editStudyHelperBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/emptyListTV"
@@ -100,5 +102,17 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/fab"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/backToLogin"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="184dp"
+        android:background="@android:drawable/alert_light_frame"
+        android:backgroundTint="#F8D7D7"
+        android:onClick="goBackToLoginActivity"
+        android:text="log out"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

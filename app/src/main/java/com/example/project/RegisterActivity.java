@@ -129,9 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this,"plese enter your first name",Toast.LENGTH_SHORT).show();
             return;
         }
-        if (Email.matches(emailPattern))
-            Toast.makeText(getApplicationContext(), "Valid email address", Toast.LENGTH_SHORT).show();
-        else
+        if (!Email.matches(emailPattern))
         {
             Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
             return ;
@@ -145,6 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
         try {
 
             user.saveToDB(RegisterActivity.this);
+            Toast.makeText(getApplicationContext(), "User added", Toast.LENGTH_SHORT).show();
             Log.d("SAVE", "OK");
             }
         catch (Exception e) {
