@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
+import android.app.Application;
 import android.app.DatePickerDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -37,11 +38,11 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity"; //for logging
-    TextView fullNameTV, emailTV, todayTasks, task1, task2, task3, task4, task5;
+    TextView fullNameTV, emailTV, todayTasks, emptyListTV;
     ListView taskList;
     EditText taskDiscriptionET, taskPartET;
     Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn, editUserInfoBtn, sortListBtn;
-    String fullNameText, emailText;
+    String fullNameText, emailText, sumOfTasks;
     int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate,userId;
     ArrayAdapter<String> adapter;
     AlertDialog dialog = null;
@@ -88,16 +89,13 @@ public class MainActivity extends AppCompatActivity {
         taskList = findViewById(R.id.taskList);
         userId = getIntent().getIntExtra("GET_USER_ID", 100);
 
-
-
-
-        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this, userId);
-        String[] allTaskStrings= new String[allTasks.size()];
-        for (int i = 0; i < allTasks.size(); i++) {
-            boolean isCompleted = String.valueOf(allTasks.get(i).getCompleted()).compareTo("true") == 0;
-            Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasks.get(i).getId(), String.valueOf(allTasks.get(i).getCompleted()));
+        ArrayList<Tasks> allTasksForUser = DBHelper.getTasksForUserFromDB(MainActivity.this, userId);
+        String[] allTaskStrings= new String[allTasksForUser.size()];
+        for (int i = 0; i < allTasksForUser.size(); i++) {
+            boolean isCompleted = String.valueOf(allTasksForUser.get(i).getCompleted()).compareTo("true") == 0;
+            Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasksForUser.get(i).getId(), String.valueOf(allTasksForUser.get(i).getCompleted()));
             String statusSymbol = isCompleted ? "✅" : "❌";
-            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + statusSymbol; // this is what's going to be displayed in the list row
+            allTaskStrings[i] = allTasksForUser.get(i).getDescription() + " - " + statusSymbol; // this is what's going to be displayed in the list row
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         // this is what happens when we press an item on the list
@@ -155,18 +153,14 @@ public class MainActivity extends AppCompatActivity {
         currentYearForDate=calendar.get(Calendar.YEAR);
         currentMonth=calendar.get(Calendar.MONTH);
 
-        task1 = findViewById(R.id.task1);
-        task2 = findViewById(R.id.task2);
-        task3 = findViewById(R.id.task3);
-        task4 = findViewById(R.id.task4);
-        task5 = findViewById(R.id.task5);
 
         ArrayList<User> allUsers = DBHelper.getAllUsersFromDB(this);
         userId = getIntent().getIntExtra("GET_USER_ID", 100);
         for (int i = 0; i < allUsers.size(); i++) {
             if (allUsers.get(i).getId() == userId) {
                 fullNameText = "Hello "+allUsers.get(i).getF_name()+" "+allUsers.get(i).getL_name();
-                emailText = "      "+allUsers.get(i).getEmail();
+                emailText = "Email:"+allUsers.get(i).getEmail();
+
 
             }
         }
@@ -177,7 +171,15 @@ public class MainActivity extends AppCompatActivity {
         emailTV = findViewById(R.id.emailTV);
         emailTV.setText(emailText);
         todayTasks = findViewById(R.id.todayTasks);
-        todayTasks.setText(String.valueOf(numOfTodayTasks()));
+        todayTasks.setText(String.valueOf("Number of your Tasks: "+DBHelper.getTasksForUserFromDB(MainActivity.this, userId).size()));
+
+        emptyListTV=findViewById(R.id.emptyListTV);
+        ArrayList<Tasks> tasksForUser=DBHelper.getTasksForUserFromDB(MainActivity.this, userId);
+        if(tasksForUser.size()==0){
+            emptyListTV.setVisibility(View.VISIBLE);
+        }
+        else emptyListTV.setVisibility(View.INVISIBLE);
+
 
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -266,9 +268,9 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG+2, tasks.getTime().toString());
                             tasks.saveToDB(MainActivity.this);
                             Log.d(TAG,tasks.toString());
-                            Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
-                            refreshList();
-                            dialog.dismiss();
+                            //Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
+                            //refreshList();
+                            recreate();
                         }
                         catch (Exception e) {
                             Log.d(TAG, "lo oved");
@@ -291,20 +293,20 @@ private long getTimeTillTaskInMilliseconds(MyDate futureDate, MyTime futureTime)
     Calendar taskStart = Calendar.getInstance();
     taskStart.set(futureDate.getYear(), futureDate.getMounth(), futureDate.getDay(), futureTime.getStartHour(), futureTime.getStartMins());
     long resultDiffInMilliseconds = taskStart.getTimeInMillis() - now.getTimeInMillis();
-    Log.d("RESULT DIFF IN MILLISECONDS:", String.valueOf(resultDiffInMilliseconds));
+    Log.d("RESULT DIFF IN MILLISECONDS:", String.valueOf(resultDiffInMilliseconds/1000/60));
     return resultDiffInMilliseconds;
-};
+}
 
 private void scheduleNotification(Notification notification, long delay) {
     Intent notificationIntent = new Intent(this, NotificationPublisher.class);
     notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
     notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    long futureInMillis =  (SystemClock.elapsedRealtime() + delay);
+    long futureInMillis =  ((SystemClock.elapsedRealtime()+ delay));
     AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
     alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    Toast.makeText(MainActivity.this, "scheduled task notification to; "+futureInMillis+"milliseconds from now", Toast.LENGTH_LONG).show();
-    Log.d("SCHEDULE NOTIFICATION DELAY:", String.valueOf(futureInMillis));
+    Toast.makeText(MainActivity.this, "scheduled task notification to; "+futureInMillis/1000+"seconds from now", Toast.LENGTH_LONG).show();
+    Log.d("SCHEDULE NOTIFICATION DELAY:", String.valueOf(SystemClock.elapsedRealtime()));
 }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -466,7 +468,7 @@ private void scheduleNotification(Notification notification, long delay) {
                         break;
                 }
 
-                return true;
+                return false;
             }
 
         });

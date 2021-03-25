@@ -7,18 +7,18 @@
         android:layout_height="match_parent"
         tools:context=".RegisterActivity">
 
-    <TextView
-        android:id="@+id/fNameText"
-        android:layout_width="146dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="28dp"
-        android:text="first name"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/fNameText"
+            android:layout_width="146dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="124dp"
+            android:text="first name"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+        <TextView
         android:id="@+id/lNameText"
         android:layout_width="146dp"
         android:layout_height="39dp"
@@ -167,7 +167,7 @@
         android:layout_height="37dp"
         android:layout_marginStart="24dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/passText"
         app:layout_constraintStart_toEndOf="@+id/passText"
@@ -180,7 +180,7 @@
         android:layout_height="37dp"
         android:layout_marginStart="24dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/confirmPassText"
         app:layout_constraintStart_toEndOf="@+id/confirmPassText"
@@ -192,26 +192,39 @@
         android:id="@+id/mailET"
         android:layout_width="176dp"
         android:layout_height="37dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="216dp"
+        android:layout_marginStart="24dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textWebEmailAddress"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/mailText"
+        app:layout_constraintStart_toEndOf="@+id/mailText"
+        app:layout_constraintTop_toTopOf="@+id/mailText"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="28dp"
+        android:background="@android:drawable/bottom_bar"
+        android:backgroundTint="#BAE6FA"
         android:onClick="reg2"
         android:text="Continue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmPassText"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/mailText" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="44dp"
+        android:background="@android:drawable/bottom_bar"
+        android:backgroundTint="#8FECF8"
+        android:text="Add User page"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

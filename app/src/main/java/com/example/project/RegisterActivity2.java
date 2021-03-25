@@ -250,7 +250,7 @@ public class RegisterActivity2 extends AppCompatActivity implements AdapterView.
     public void returnToMainFunc(View view) {
         userId = getIntent().getIntExtra("GET_USER_ID",100);
         Intent intent = new Intent(RegisterActivity2.this, MainActivity.class);
-        intent.putExtra("purpose","ss");
+        intent.putExtra("diffrentTasks","ss");
         intent.putExtra("GET_USER_ID", userId);
 
         startActivity(intent);

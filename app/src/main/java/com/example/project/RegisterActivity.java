@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText etreg,etLN,etFN,etLang,etAge,etPass,etEmail;
+    EditText etreg,etLN,etFN,etLang,etAge,etPass,etEmail,etPass2;
     Button bt;
     static int idForDB=0;
     String FirstName, LastName, Region, Lang, Pass, Email;
@@ -40,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         etAge=findViewById(R.id.ageEdit);
         etFN=findViewById(R.id.firstNameEdit);
         etLN=findViewById(R.id.lastNameEdit);
+        etPass2=findViewById(R.id.conPassET);
 
         bt=findViewById(R.id.button);
 
@@ -53,13 +54,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
     private static final String TAG = "db try";
-
     public String regFName(){
-
         return etFN.getText().toString().trim();
     }
     public String regLName(){
-
         return etLN.getText().toString().trim();
     }
     public int regAge(){
@@ -73,19 +71,20 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
     public String regRegion(){
-
         return etreg.getText().toString().trim();
     }
     public String regLang(){
-
         return etLang.getText().toString().trim();
     }
     public String regPass(){
-
         return etPass.getText().toString().trim();
     }
-    public String regEmail(){
 
+    public String regPass2(){
+        return etPass2.getText().toString().trim();
+    }
+
+    public String regEmail(){
         return etEmail.getText().toString().trim();
     }
 
@@ -114,10 +113,25 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d("user detail after creation",""+Email+" "+FirstName);
         if (isUserExist(Email))
         {
+
             //TOAST "please select another email, user already exists"
             Toast.makeText(RegisterActivity.this,"please select another Email, user already exists",Toast.LENGTH_SHORT).show();
             return;
         }
+        else if(!etPass2.getText().toString().trim().equals(etPass.getText().toString()) && !etPass.getText().toString().trim().equals("")){
+            Toast.makeText(RegisterActivity.this,"please make sure the password is the same in both places",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if(etLN.getText().toString().trim().equals("")){
+            Toast.makeText(RegisterActivity.this,"plese enter your last name",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if(etFN.getText().toString().trim().equals("")){
+            Toast.makeText(RegisterActivity.this,"plese enter your first name",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         else {
             //user = new User(idForDB, FirstName, LastName, Lang, age, Region, Pass, Email);
         }
