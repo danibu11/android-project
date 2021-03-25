@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     ListView taskList;
     EditText taskDiscriptionET, taskPartET;
     Button editStartTimeBtn,editEndTimeBtn,editDateBtn, taskBtn, editUserInfoBtn, sortListBtn;
-    String fullNameText, emailText, sumOfTasks;
+    String fullNameText, emailText;
     int selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute,month,day,yearForDate,idForTasks=0,taskLength,currentMonth,currentDay,currentYearForDate,userId;
     ArrayAdapter<String> adapter;
     AlertDialog dialog = null;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             boolean isCompleted = String.valueOf(allTasksForUser.get(i).getCompleted()).compareTo("true") == 0;
             Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasksForUser.get(i).getId(), String.valueOf(allTasksForUser.get(i).getCompleted()));
             String statusSymbol = isCompleted ? "✅" : "❌";
-            allTaskStrings[i] =allTasksForUser.get(i).getDescription() +"    "+ statusSymbol; // this is what's going to be displayed in the list row
+            allTaskStrings[i] ="-- DESCRIPTION --   "+allTasksForUser.get(i).getDescription() +" \n-- DATE --     "+allTasksForUser.get(i).getDate().toString()+"\n-- START IN --  "+allTasksForUser.get(i).getTime().getStartHour()+":"+allTasksForUser.get(i).getTime().getStartMins()+"  --    -- FINISH -- "+statusSymbol;
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         // this is what happens when we press an item on the list
@@ -268,12 +269,16 @@ public class MainActivity extends AppCompatActivity {
                             taskLength = time.getFinishHour() - time.getStartHour();
                             userId=getIntent().getIntExtra("GET_USER_ID",100);
 
-                            Tasks tasks=new Tasks(taskPartET.getText().toString(), taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time,userId);
+                            if(taskDiscriptionET.getText().toString().equals("")){
+                                Toast.makeText(MainActivity.this, "you must have description for your task", Toast.LENGTH_LONG).show();
+                                recreate();
+                            }
+                            Tasks tasks=new Tasks(taskPartET.getText().toString(), taskLength, idForTasks, taskDiscriptionET.getText().toString(), date, time, userId);
                             Log.d(TAG+1, tasks.getDate().toString());
                             Log.d(TAG+2, tasks.getTime().toString());
                             tasks.saveToDB(MainActivity.this);
                             Log.d(TAG,tasks.toString());
-                            //Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
                             //refreshList();
                             recreate();
                         }
@@ -327,13 +332,13 @@ private void scheduleNotification(Notification notification, long delay) {
     private void refreshList() {
         Log.d(TAG, "refreshList");
         userId = getIntent().getIntExtra("GET_USER_ID", 100);
-        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
-        String[] allTaskStrings= new String[allTasks.size()];
-        for (int i = 0; i < allTasks.size(); i++) {
-            boolean isCompleted = String.valueOf(allTasks.get(i).getCompleted()).compareTo("true") == 0;
-            Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasks.get(i).getId(), String.valueOf(allTasks.get(i).getCompleted()));
+        ArrayList<Tasks> allTasksForUser = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
+        String[] allTaskStrings= new String[allTasksForUser.size()];
+        for (int i = 0; i < allTasksForUser.size(); i++) {
+            boolean isCompleted = String.valueOf(allTasksForUser.get(i).getCompleted()).compareTo("true") == 0;
+            Log.d("EVALUATING TASK COMPLETION FOR TASK " + allTasksForUser.get(i).getId(), String.valueOf(allTasksForUser.get(i).getCompleted()));
             String statusSymbol = isCompleted ? "✅" : "❌";
-            allTaskStrings[i] = allTasks.get(i).getDescription() + " - " + statusSymbol;
+            allTaskStrings[i] ="-- DESCRIPTION --   "+allTasksForUser.get(i).getDescription() +" \n-- DATE --     "+allTasksForUser.get(i).getDate().toString()+"\n-- START IN --  "+allTasksForUser.get(i).getTime().getStartHour()+":"+allTasksForUser.get(i).getTime().getStartMins()+"    \n-- FINISH -- "+statusSymbol;
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTaskStrings);
         taskList.setAdapter(adapter); //re-set the list`s adapter
@@ -435,7 +440,6 @@ private void scheduleNotification(Notification notification, long delay) {
                             }
                         }
 
-                        refreshList2(tasksForShow);
                         break;
 
                     case R.id.showFinishTask:
@@ -445,7 +449,7 @@ private void scheduleNotification(Notification notification, long delay) {
                             }
                         }
 
-                        refreshList2(tasksForShow);
+
                         break;
 
                     case R.id.showTodayTask:
@@ -469,7 +473,7 @@ private void scheduleNotification(Notification notification, long delay) {
                             }
                         }
 
-                        refreshList2(tasksForShow);
+
                         break;
                 }
 
@@ -519,7 +523,17 @@ private void scheduleNotification(Notification notification, long delay) {
 
         return myQuittingDialogBox;
 
-    }}
+    }
+
+    public void goBackToLoginActivity(View view) {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        String[] s = null;
+        s = emailText.split(":");
+
+        intent.putExtra("GET_EMAIL",s[1]);
+        startActivity(intent);
+    }
+}
 /*
 check your current branch name and status at any time (git status)
 //new task
