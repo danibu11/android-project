@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         userId = getIntent().getIntExtra("GET_USER_ID", 100);
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int importance = NotificationManager.IMPORTANCE_LOW;
+        int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel mChannel = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             mChannel = new NotificationChannel(notificationChannelId, "disOrder_notification_id", importance);
@@ -262,12 +262,42 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("myDate ctor payload", day+" "+month+" "+yearForDate);
                             MyDate date=new MyDate(day,month,yearForDate);
                             MyTime time=new MyTime(selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute);
-                            long timeTillTaskInMilliseconds = getTimeTillTaskInMilliseconds(date, time);
-                            Log.d(TAG, String.valueOf(timeTillTaskInMilliseconds));
-                            scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeTillTaskInMilliseconds);
+                           // long timeTillTaskInMilliseconds = getTimeTillTaskInMilliseconds(date, time);
+                            //Log.d(TAG, String.valueOf((((time.getFinishHour()*3600)-((time.getStartHour())*3600))+((time.getFinishMins()-time.getStartMins())*60)) *1000)));
+                            Calendar c = Calendar.getInstance();
+                            long timeUntilNotifPop = ((time.getStartHour())*3600*1000 + (time.getStartMins())*60*1000)-((c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000)-c.getTime().getSeconds()*1000;
+                            Log.d(TAG, "onClickcurtime: "+timeUntilNotifPop);
+                            scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeUntilNotifPop);
                             Log.d(TAG, time.toString()+" "+date.toString());
-                            taskLength = time.getFinishHour() - time.getStartHour();
+                            taskLength = (((time.getFinishHour()*3600)-((time.getStartHour())*3600))+((time.getFinishMins()-time.getStartMins())*60)) *1000;
                             userId=getIntent().getIntExtra("GET_USER_ID",100);
+                            for (StudyHelper sh: DBHelper.getStudyHelperFromDB(getApplicationContext())) {
+                                if(sh.getUserId() == userId){
+                                if(sh.isRitalin())
+                                    scheduleNotification(getNotification("Take a Ritalin pill", "Disorder Task Notification!"), 1800000);
+                                if(sh.isKonserta())
+                                    scheduleNotification(getNotification("Take a Konserta pill", "Disorder Task Notification!"), 2700000);
+
+                                    switch(sh.getMealsPerDay()){
+                                        case 1:
+                                            scheduleNotification(getNotification("Eat your Only Meal :)", "Disorder Task Notification!"),  12*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
+                                            break;
+
+                                        case 2:
+                                            scheduleNotification(getNotification("Eat your Breakfast Meal :)", "Disorder Task Notification!"),  9*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
+                                            scheduleNotification(getNotification("Eat your Lunch Meal :)", "Disorder Task Notification!"),  12*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
+                                            break;
+
+                                        case 3:
+                                            scheduleNotification(getNotification("Eat your Breakfast Meal :)", "Disorder Task Notification!"),  9*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
+                                            scheduleNotification(getNotification("Eat your Lunch Meal :)", "Disorder Task Notification!"),  12*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
+                                            scheduleNotification(getNotification("Eat your Dinner Meal :)", "Disorder Task Notification!"),  18*3600*1000-(c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000 );
+                                    }
+                                    }
+                                }
+
+
+
 
                             if(taskDiscriptionET.getText().toString().equals("")){
                                 Toast.makeText(MainActivity.this, "you must have description for your task", Toast.LENGTH_LONG).show();

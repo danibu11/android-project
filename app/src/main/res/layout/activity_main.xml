@@ -5,6 +5,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login"
     android:elevation="12dp"
     android:textAlignment="gravity"
     tools:context=".MainActivity">
@@ -56,6 +57,8 @@
         android:id="@+id/taskList"
         android:layout_width="299dp"
         android:layout_height="329dp"
+        android:alpha="@dimen/material_emphasis_medium"
+        android:background="@drawable/listview"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
