@@ -325,8 +325,10 @@ public class MainActivity extends AppCompatActivity {
                             tasks.saveToDB(MainActivity.this);
                             Log.d(TAG,tasks.toString());
                             Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
-                            //refreshList();
-                            recreate();
+                            refreshList();
+                            emptyListTV.setVisibility(view.INVISIBLE);
+                            todayTasks.setText(String.valueOf("Number of your Tasks: "+DBHelper.getTasksForUserFromDB(MainActivity.this, userId).size()));
+                            dialog.dismiss();
                         }
                         catch (Exception e) {
                             Log.d(TAG, "lo oved");
@@ -486,6 +488,7 @@ private void scheduleNotification(Notification notification, long delay) {
                             }
                         }
 
+                        Toast.makeText(MainActivity.this," The Amount Of Undone Tasks In Your List"+tasksForShow.size()/2,Toast.LENGTH_LONG).show();
                         break;
 
                     case R.id.showFinishTask:
@@ -495,32 +498,9 @@ private void scheduleNotification(Notification notification, long delay) {
                             }
                         }
 
-
+                        Toast.makeText(MainActivity.this," The Amount Of Done Tasks In Your List"+(tasksForShow.size()/2),Toast.LENGTH_LONG).show();
                         break;
 
-                    case R.id.showTodayTask:
-                        Calendar calendar=Calendar.getInstance();
-                        currentDay=calendar.get(Calendar.DAY_OF_MONTH);
-                        currentYearForDate=calendar.get(Calendar.YEAR);
-                        currentMonth=calendar.get(Calendar.MONTH);
-                        Calendar today=Calendar.getInstance();
-                        today.set(currentYearForDate, currentMonth, currentDay);
-                        Calendar taskDay=Calendar.getInstance();
-                        for(int i = 0; i<allTasks.size(); i++){
-                            if(allTasks.get(i).getCompleted()==false){
-                                Tasks currentTask = allTasks.get(i);
-                                taskDay.set(currentTask.getDate().getYear(), currentTask.getDate().getMounth(), currentTask.getDate().getDay());
-                                Log.d("popup2", taskDay.get(Calendar.DAY_OF_MONTH)+", "+today.get(Calendar.DAY_OF_MONTH));
-                                if(today.equals(taskDay)){
-                                    tasksForShow.add(allTasks.get(i));
-                                    Log.d("popup2 check "+i , tasksForShow.get(i).toString());
-
-                                }
-                            }
-                        }
-
-
-                        break;
                 }
 
                 return false;

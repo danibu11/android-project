@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 email = emailField.getText().toString();
                 String password = passwordField.getText().toString();
-                String credentials = "Email: "+email+", Password: " + password;
+                String credentials = "Email: "+email;
                 String emailPattern = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
                 boolean emailEmpty, passwordEmpty;
                 //check not empty
