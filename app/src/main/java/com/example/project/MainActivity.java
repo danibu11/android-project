@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         userId = getIntent().getIntExtra("GET_USER_ID", 100);
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int importance = NotificationManager.IMPORTANCE_LOW;
+        int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel mChannel = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             mChannel = new NotificationChannel(notificationChannelId, "disOrder_notification_id", importance);
@@ -257,17 +257,63 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         try{
+                            // parsing task data to date and time objects
                             ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
                             idForTasks = currentTasks.size() + 1;
                             Log.d("myDate ctor payload", day+" "+month+" "+yearForDate);
                             MyDate date=new MyDate(day,month,yearForDate);
                             MyTime time=new MyTime(selectedStartHour,selectedStartMinute,selectedEndHour,selectedEndMinute);
-                            long timeTillTaskInMilliseconds = getTimeTillTaskInMilliseconds(date, time);
-                            Log.d(TAG, String.valueOf(timeTillTaskInMilliseconds));
-                            scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeTillTaskInMilliseconds);
+                            // calculate task time-until-start for the notification delay
+                            Calendar c = Calendar.getInstance();
+                            long timeUntilNotifPop = ((time.getStartHour())*3600*1000 + (time.getStartMins())*60*1000)-((c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000)-c.getTime().getSeconds()*1000;
+                            Log.d(TAG, "onClickcurtime: "+timeUntilNotifPop);
+                            scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeUntilNotifPop);
+                            scheduleNotification(getNotification("Your next task begins in 15 minutes!", "DisOrder Pre-Task Reminder"), timeUntilNotifPop - (15*60*1000));
                             Log.d(TAG, time.toString()+" "+date.toString());
-                            taskLength = time.getFinishHour() - time.getStartHour();
+                           // calculate task length
+                            taskLength = (((time.getFinishHour()*3600)-((time.getStartHour())*3600))+((time.getFinishMins()-time.getStartMins())*60)) *1000;
                             userId=getIntent().getIntExtra("GET_USER_ID",100);
+                            for (StudyHelper sh: DBHelper.getStudyHelperFromDB(getApplicationContext())) {
+                                    if(sh.getUserId() == userId) {
+                                        if(sh.isRitalin() || sh.isKonserta()) {
+                                            Log.d(TAG, "RITALIN/KONSERTA TRUE");
+                                            String pillType = sh.isRitalin() ? "Ritalin" : "Konserta";
+                                            scheduleNotification(getNotification("Take your " + pillType + " pill!", "DisOrder Pre-Task Reminder"), timeUntilNotifPop - (40*60*1000));
+                                        }
+                                        // setting meal-related notifications for this task, according to study helper data
+                                        switch (sh.getMealsPerDay()) {
+                                            case 1:
+                                                Log.d(TAG, "getMealsPerDay 1");
+                                                scheduleNotification(getNotification("Eat your Only Meal :)", "Disorder Task Notification!"), timeUntilNotifPop + (taskLength/2));
+                                                break;
+                                            case 2:
+                                                Log.d(TAG, "getMealsPerDay 2");
+                                                long twoMealInterval = taskLength / 3;
+                                                scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + twoMealInterval);
+                                                scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (twoMealInterval * 2));
+                                                break;
+                                            case 3:
+                                                Log.d(TAG, "getMealsPerDay 3");
+                                                long threeMealInterval = taskLength / 4;
+                                                scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + threeMealInterval);
+                                                scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (threeMealInterval * 2));
+                                                scheduleNotification(getNotification("Eat your Dinner :)", "Disorder Task Notification!"), timeUntilNotifPop + (threeMealInterval * 3));
+                                        }
+                                        // setting break-related notifications for this task, according to study helper data
+                                        if (sh.isAdhd() || sh.isAdd()) {
+                                            Log.d(TAG, "isAdhd TRUE");
+                                            long threeMealInterval = taskLength / 6;
+                                            // stretching notif
+                                            scheduleNotification(getNotification("stretch for 5 minutes", "Disorder Study Helper Notification"), timeUntilNotifPop + threeMealInterval);
+                                            scheduleNotification(getNotification("stretch for 5 minutes", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 3));
+                                            // break notif
+                                            scheduleNotification(getNotification("take a coffee break (15-20 min)", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 3));
+                                            // motivation notif
+                                            scheduleNotification(getNotification("Stop watching Cats on Youtube!", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 3) + 5*60*1000);
+                                            scheduleNotification(getNotification("snack time", "Disorder Study Helper Notification"), timeUntilNotifPop + (threeMealInterval * 5));
+                                        }
+                                    }
+                                }
 
                             if(taskDiscriptionET.getText().toString().equals("")){
                                 Toast.makeText(MainActivity.this, "you must have description for your task", Toast.LENGTH_LONG).show();
@@ -279,8 +325,10 @@ public class MainActivity extends AppCompatActivity {
                             tasks.saveToDB(MainActivity.this);
                             Log.d(TAG,tasks.toString());
                             Toast.makeText(MainActivity.this, "Task added ", Toast.LENGTH_LONG).show();
-                            //refreshList();
-                            recreate();
+                            refreshList();
+                            emptyListTV.setVisibility(view.INVISIBLE);
+                            todayTasks.setText(String.valueOf("Number of your Tasks: "+DBHelper.getTasksForUserFromDB(MainActivity.this, userId).size()));
+                            dialog.dismiss();
                         }
                         catch (Exception e) {
                             Log.d(TAG, "lo oved");
@@ -440,6 +488,7 @@ private void scheduleNotification(Notification notification, long delay) {
                             }
                         }
 
+                        Toast.makeText(MainActivity.this," The Amount Of Undone Tasks In Your List"+tasksForShow.size()/2,Toast.LENGTH_LONG).show();
                         break;
 
                     case R.id.showFinishTask:
@@ -449,32 +498,9 @@ private void scheduleNotification(Notification notification, long delay) {
                             }
                         }
 
-
+                        Toast.makeText(MainActivity.this," The Amount Of Done Tasks In Your List"+(tasksForShow.size()/2),Toast.LENGTH_LONG).show();
                         break;
 
-                    case R.id.showTodayTask:
-                        Calendar calendar=Calendar.getInstance();
-                        currentDay=calendar.get(Calendar.DAY_OF_MONTH);
-                        currentYearForDate=calendar.get(Calendar.YEAR);
-                        currentMonth=calendar.get(Calendar.MONTH);
-                        Calendar today=Calendar.getInstance();
-                        today.set(currentYearForDate, currentMonth, currentDay);
-                        Calendar taskDay=Calendar.getInstance();
-                        for(int i = 0; i<allTasks.size(); i++){
-                            if(allTasks.get(i).getCompleted()==false){
-                                Tasks currentTask = allTasks.get(i);
-                                taskDay.set(currentTask.getDate().getYear(), currentTask.getDate().getMounth(), currentTask.getDate().getDay());
-                                Log.d("popup2", taskDay.get(Calendar.DAY_OF_MONTH)+", "+today.get(Calendar.DAY_OF_MONTH));
-                                if(today.equals(taskDay)){
-                                    tasksForShow.add(allTasks.get(i));
-                                    Log.d("popup2 check "+i , tasksForShow.get(i).toString());
-
-                                }
-                            }
-                        }
-
-
-                        break;
                 }
 
                 return false;

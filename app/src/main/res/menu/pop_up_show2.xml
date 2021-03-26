@@ -8,9 +8,6 @@
         android:id="@+id/showFinishTask"
         android:title="Done Tasks" />
 
-    <item
-        android:id="@+id/showTodayTask"
-        android:title="Today Tasks" />
 
 
 
