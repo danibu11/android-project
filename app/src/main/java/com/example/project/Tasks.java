@@ -144,6 +144,6 @@ public class Tasks implements Serializable {
 
     @Override
     public String toString() {
-        return "taskID= "+this.id +", part=" + part + ", length=" + length + ", description=" + description + '\'' + ", date=" + date + ", time=" + time +"UserId"+userId;
+        return "taskID = "+this.id +", task part = " + part + ", task length = " + length + ", description = " + description +", date = " + date + ", time = " + time +"UserId = "+userId;
     }
 }

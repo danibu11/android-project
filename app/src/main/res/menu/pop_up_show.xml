@@ -8,5 +8,10 @@
         android:id="@+id/delT"
         android:title="Delete Task" />
 
+    <item
+        android:id="@+id/showTask"
+        android:title="Show Task" />
+
+
 
 </menu>

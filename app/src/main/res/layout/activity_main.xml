@@ -69,14 +69,15 @@
         android:id="@+id/editStudyHelperBtn"
         android:layout_width="130dp"
         android:layout_height="60dp"
+        android:layout_marginTop="100dp"
         android:background="@android:drawable/alert_light_frame"
-        android:backgroundTint="#F8D7D7"
 
+        android:backgroundTint="#F8D7D7"
         android:elevation="10dp"
         android:onClick="switchActivityToReg2"
-        android:text="edit information"
+        android:text="user information"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backToLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/todayTasks" />
 
     <Button
         android:id="@+id/sortListBtn"
@@ -89,7 +90,7 @@
         android:onClick="popUpForListView"
         android:shadowColor="@color/design_default_color_on_secondary"
         android:shadowDy="?android:attr/spotShadowAlpha"
-        android:text="sort list"
+        android:text="tasks information"
         app:layout_constraintBottom_toTopOf="@+id/taskList"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editStudyHelperBtn"
@@ -110,12 +111,12 @@
         android:id="@+id/backToLogin"
         android:layout_width="130dp"
         android:layout_height="60dp"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="32dp"
         android:background="@android:drawable/alert_light_frame"
-        android:backgroundTint="#F8D7D7"
+        android:backgroundTint="#F48888"
         android:onClick="goBackToLoginActivity"
         android:text="log out"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

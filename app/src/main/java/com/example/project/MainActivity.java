@@ -110,13 +110,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,  int position, long id)
             {
-                userId = getIntent().getIntExtra("GET_USER_ID", 100);
-                ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
                 PopupMenu popupMenu=new PopupMenu(MainActivity.this,view);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
 
+                        userId = getIntent().getIntExtra("GET_USER_ID", 100);
+                        ArrayList<Tasks> allTasks = DBHelper.getTasksForUserFromDB(MainActivity.this,userId);
                         int iditem = item.getItemId() ;
                         switch (iditem) {
                             case R.id.showT:
@@ -126,8 +126,17 @@ public class MainActivity extends AppCompatActivity {
                                 taskToSave.saveToDB(MainActivity.this);
                                 recreate();
                                 break;
-                            case R.id.delT:AlertDialog diaBox = AskOption(position);
+
+                            case R.id.delT:
+                                AlertDialog diaBox = AskOption(position);
                                 diaBox.show();
+
+                                break;
+
+                            case R.id.showTask:
+
+                                Toast.makeText(MainActivity.this, allTasks.get(position).toString(), Toast.LENGTH_LONG).show();
+                                recreate();
 
                                 break;
                         }
@@ -268,11 +277,12 @@ public class MainActivity extends AppCompatActivity {
                             long timeUntilNotifPop = ((time.getStartHour())*3600*1000 + (time.getStartMins())*60*1000)-((c.getTime().getHours())*3600*1000 + (c.getTime().getMinutes())*60*1000)-c.getTime().getSeconds()*1000;
                             Log.d(TAG, "onClickcurtime: "+timeUntilNotifPop);
                             scheduleNotification(getNotification(taskDiscriptionET.getText().toString(), "Disorder Task Notification!"), timeUntilNotifPop);
-                            scheduleNotification(getNotification("Your next task begins in 15 minutes!", "DisOrder Pre-Task Reminder"), timeUntilNotifPop - (15*60*1000));
+                            scheduleNotification(getNotification("Your next task"+taskDiscriptionET.getText().toString()+" begins in few minutes!", "DisOrder Pre-Task Reminder"), timeUntilNotifPop - (15*60*1000));
                             Log.d(TAG, time.toString()+" "+date.toString());
                            // calculate task length
                             taskLength = (((time.getFinishHour()*3600)-((time.getStartHour())*3600))+((time.getFinishMins()-time.getStartMins())*60)) *1000;
                             userId=getIntent().getIntExtra("GET_USER_ID",100);
+                            /*
                             for (StudyHelper sh: DBHelper.getStudyHelperFromDB(getApplicationContext())) {
                                     if(sh.getUserId() == userId) {
                                         if(sh.isRitalin() || sh.isKonserta()) {
@@ -283,17 +293,17 @@ public class MainActivity extends AppCompatActivity {
                                         // setting meal-related notifications for this task, according to study helper data
                                         switch (sh.getMealsPerDay()) {
                                             case 1:
-                                                Log.d(TAG, "getMealsPerDay 1");
+                                                Log.d("TAG", "getMealsPerDay 1");
                                                 scheduleNotification(getNotification("Eat your Only Meal :)", "Disorder Task Notification!"), timeUntilNotifPop + (taskLength/2));
                                                 break;
                                             case 2:
-                                                Log.d(TAG, "getMealsPerDay 2");
+                                                Log.d("TAG", "getMealsPerDay 2");
                                                 long twoMealInterval = taskLength / 3;
                                                 scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + twoMealInterval);
                                                 scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (twoMealInterval * 2));
                                                 break;
                                             case 3:
-                                                Log.d(TAG, "getMealsPerDay 3");
+                                                Log.d("TAG", "getMealsPerDay 3");
                                                 long threeMealInterval = taskLength / 4;
                                                 scheduleNotification(getNotification("Eat your Breakfast :)", "Disorder Task Notification!"), timeUntilNotifPop + threeMealInterval);
                                                 scheduleNotification(getNotification("Eat your Lunch :)", "Disorder Task Notification!"), timeUntilNotifPop + (threeMealInterval * 2));
@@ -301,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         // setting break-related notifications for this task, according to study helper data
                                         if (sh.isAdhd() || sh.isAdd()) {
-                                            Log.d(TAG, "isAdhd TRUE");
+                                            Log.d("TAG", "isAdhd TRUE");
                                             long threeMealInterval = taskLength / 6;
                                             // stretching notif
                                             scheduleNotification(getNotification("stretch for 5 minutes", "Disorder Study Helper Notification"), timeUntilNotifPop + threeMealInterval);
@@ -314,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-
+                                        */
                             if(taskDiscriptionET.getText().toString().equals("")){
                                 Toast.makeText(MainActivity.this, "you must have description for your task", Toast.LENGTH_LONG).show();
                                 recreate();
@@ -424,35 +434,6 @@ private void scheduleNotification(Notification notification, long delay) {
         Log.d("PARSED SELECTED DATE", this.day+" "+this.month+" "+this.yearForDate);
     }
 
-    public int numOfTodayTasks(){
-        // this is used to find if the task day is today
-        Calendar calendar=Calendar.getInstance();
-        currentDay=calendar.get(Calendar.DAY_OF_MONTH);
-        currentYearForDate=calendar.get(Calendar.YEAR);
-        currentMonth=calendar.get(Calendar.MONTH);
-        Calendar today=Calendar.getInstance();
-        today.set(currentYearForDate, currentMonth, currentDay);
-        Calendar taskDay=Calendar.getInstance();
-        //        taskDay.set(taskYear, taskMonth, taskYear);
-        //        boolean isSameDay = today.equals(taskDay);
-        ArrayList<Tasks> currentTasks = DBHelper.getAllTasksFromDB(MainActivity.this);
-        int sum = 0;
-        for (int i = 0; i < currentTasks.size(); i++){
-            Tasks currentTask = currentTasks.get(i);
-            taskDay.set(currentTask.getDate().getYear(), currentTask.getDate().getMounth(), currentTask.getDate().getDay());
-             if(today.equals(taskDay)){
-                sum++;
-            }
-        }
-        return sum;
-    }
-
-    public void closeDialogFunc(AlertDialog.Builder mBuilder){
-
-        dialog.dismiss();
-    }
-
-
         //as straightforward as can be
     public void deleteDB(){
         Log.d(TAG, "delete DB");
@@ -481,26 +462,27 @@ private void scheduleNotification(Notification notification, long delay) {
                 String[] allTaskStrings= null;
                 switch (iditem) {
                     case R.id.showNotFinishTask:
+                        tasksForShow=new ArrayList<Tasks>();
                         for(int i = 0; i<allTasks.size(); i++){
                             if(allTasks.get(i).getCompleted()==false){
                                 tasksForShow.add(allTasks.get(i));
-                                Log.d("popup2 check "+i , tasksForShow.get(i).toString());
+                                //Log.d("popup2 check "+i , tasksForShow.get(i).toString());
                             }
                         }
 
-                        Toast.makeText(MainActivity.this," The Amount Of Undone Tasks In Your List"+tasksForShow.size()/2,Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this," The Amount Of Undone Tasks In Your List  "+tasksForShow.size(),Toast.LENGTH_LONG).show();
                         break;
 
                     case R.id.showFinishTask:
+                        tasksForShow=new ArrayList<Tasks>();
                         for(int i = 0; i<allTasks.size(); i++){
                             if(allTasks.get(i).getCompleted()==true){
                                 tasksForShow.add(allTasks.get(i));
                             }
                         }
 
-                        Toast.makeText(MainActivity.this," The Amount Of Done Tasks In Your List"+(tasksForShow.size()/2),Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this," The Amount Of Done Tasks In Your List  "+(tasksForShow.size()),Toast.LENGTH_LONG).show();
                         break;
-
                 }
 
                 return false;
